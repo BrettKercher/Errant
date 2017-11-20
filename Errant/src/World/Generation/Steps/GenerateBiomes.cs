@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Errant.src.World.Generation.Steps {
     class GenerateBiomes : GenerationStep {
+
+        private readonly List<BIOME>[] biomes = {
+            new List<BIOME>() { BIOME.ONE, BIOME.TWO, BIOME.THREE },
+            new List<BIOME>() { BIOME.FOUR, BIOME.FIVE, BIOME.SIX, BIOME.SEVEN, BIOME.EIGHT, BIOME.NINE },
+            new List<BIOME>() { BIOME.TEN, BIOME.ELEVEN, BIOME.TWELVE },
+        };
 
         private readonly int BIOME_DENSITY = 16;
         private List<BiomeGrower> fractals;
@@ -23,10 +26,13 @@ namespace Errant.src.World.Generation.Steps {
 
         private void InitializeCentralPoints(GenerationData data, Random rng, BackgroundWorker worker = null) {
             
-            int x, y, biome;
+            int x, y;
             int xOffset, yOffset;
-            int randomIndex;
+            int randomIndex, index, tIndex;
             BiomeGrower grower;
+            PointData pointData;
+            BIOME biome;
+            List<BIOME> biomeCategory;
 
             int width = data.width;
             int height = data.height;
@@ -42,13 +48,26 @@ namespace Errant.src.World.Generation.Steps {
 
             for (int i = 1; i < BIOME_DENSITY; i++) {
                 y = (i * yStep);
+                if (y < height / 3) {
+                    tIndex = 0;
+                }
+                else if (y < 2 * height / 3) {
+                    tIndex = 1;
+                }
+                else {
+                    tIndex = 2;
+                }
                 for (int j = 1; j < BIOME_DENSITY; j++) {
                     x = (j * xStep);
                     xOffset = rng.Next(minXOffset, maxXOffset);
                     yOffset = rng.Next(minYOffset, maxYOffset);
+                    index = ((y + yOffset) * width) + (x + xOffset);
 
-                    biome = rng.Next(1, 6);
-                    grower = new BiomeGrower(((y + yOffset) * width) + (x + xOffset), (BIOME)(biome));
+                    pointData = data.pointData[index];
+
+                    biomeCategory = biomes[tIndex];
+                    biome = biomeCategory[rng.Next(0, biomeCategory.Count)];
+                    grower = new BiomeGrower(index, (biome));
                     grower.Grow(data, rng);
                     fractals.Add(grower);
                 }

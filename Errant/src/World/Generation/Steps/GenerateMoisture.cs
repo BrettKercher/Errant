@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 namespace Errant.src.World.Generation.Steps {
     class GenerateMoisture : GenerationStep {
 
+        bool once = false;
+
         public GenerateMoisture(float inWeight) {
             name = "Generate Moisture";
             description = "Moist";
@@ -30,8 +32,9 @@ namespace Errant.src.World.Generation.Steps {
                 y = i / width;
                 dX = x / (float)width;
                 dY = y / (float)height;
-
+                
                 m = generator.GetValue(dX, dY, 0, true);
+
                 data.pointData[i].moisture = m;
             }
         }

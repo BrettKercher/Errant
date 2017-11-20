@@ -15,7 +15,7 @@ namespace Errant.src.GameStates {
         
         private WorldManager worldManager = null;
         private int prevScrollValue = 0;
-        private WorldManager.DRAW_MODE worldDrawMode = WorldManager.DRAW_MODE.Elevation;
+        private WorldManager.DRAW_MODE worldDrawMode = WorldManager.DRAW_MODE.Biome;
 
         public Overworld(WorldManager manager) {
             worldManager = manager;
@@ -76,7 +76,6 @@ namespace Errant.src.GameStates {
             if (keyboardState.IsKeyDown(Keys.F10)) {
                 worldDrawMode = WorldManager.DRAW_MODE.Debug2;
             }
-
         }
 
         public void Draw(GameTime gameTime, SpriteBatch spriteBatch) {

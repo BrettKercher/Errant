@@ -12,7 +12,7 @@ namespace Errant.src.World.Generation {
 
         public WorldGenerator() {
             steps.Add(new GenerateShape(0.0f));
-//             steps.Add(new GenerateTemperature(0.0f));
+            steps.Add(new GenerateTemperature(0.0f));
             steps.Add(new GenerateMoisture(0.0f));
             steps.Add(new GenerateBiomes(0.0f));
         }

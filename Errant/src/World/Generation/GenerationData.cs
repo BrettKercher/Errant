@@ -13,7 +13,13 @@ namespace Errant.src.World.Generation {
         THREE,
         FOUR,
         FIVE,
-        SIX
+        SIX,
+        SEVEN,
+        EIGHT,
+        NINE,
+        TEN,
+        ELEVEN,
+        TWELVE,
     }
 
     struct GenerationData {

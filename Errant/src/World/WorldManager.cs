@@ -26,12 +26,18 @@ namespace Errant.src.World {
 
         private Dictionary<BIOME, Color> biomeColorMap = new Dictionary<BIOME, Color>() {
             { BIOME.NONE, Color.Blue},
-            { BIOME.ONE, Color.CornflowerBlue},
-            { BIOME.TWO, Color.Red},
-            { BIOME.THREE, Color.Yellow},
+            { BIOME.ONE, Color.White},
+            { BIOME.TWO, Color.Gray},
+            { BIOME.THREE, Color.Cyan},
             { BIOME.FOUR, Color.Green},
-            { BIOME.FIVE, Color.Purple},
-            { BIOME.SIX, Color.Orange},
+            { BIOME.FIVE, Color.SaddleBrown},
+            { BIOME.SIX, Color.ForestGreen},
+            { BIOME.SEVEN, Color.DarkOliveGreen},
+            { BIOME.EIGHT, Color.SpringGreen},
+            { BIOME.NINE, Color.LawnGreen},
+            { BIOME.TEN, Color.Yellow},
+            { BIOME.ELEVEN, Color.Red},
+            { BIOME.TWELVE, Color.OrangeRed},
         };
 
         private GenerationData data;
@@ -94,7 +100,7 @@ namespace Errant.src.World {
                 dParams.color = new Color(new Vector3(1, 1, 1) * data.pointData[tileIndex].moisture);
             }
             else if (drawMode == DRAW_MODE.Biome) {
-                if(data.pointData[tileIndex].land) {
+                if (data.pointData[tileIndex].land) {
                     dParams.color = biomeColorMap[data.pointData[tileIndex].biome];
                 }
                 else {
