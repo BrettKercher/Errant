@@ -21,8 +21,8 @@ namespace Errant.src.World.Generation {
             Random rng = new Random(); //settings.seed
 
             GenerationData data = new GenerationData();
-            data.width = (int)Config.sizeMap[settings.size].X * Config.chuckSize;
-            data.height = (int)Config.sizeMap[settings.size].Y * Config.chuckSize;
+            data.width = (int)Config.sizeMap[settings.size].X * Config.CHUNK_SIZE;
+            data.height = (int)Config.sizeMap[settings.size].Y * Config.CHUNK_SIZE;
             data.pointData = new PointData[data.width * data.height];
 
             for (int i = 0; i < data.pointData.Length; i++) {

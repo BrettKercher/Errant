@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Errant.src.World.Generation.Steps {
     class GenerateTemperature : GenerationStep {
@@ -32,10 +28,9 @@ namespace Errant.src.World.Generation.Steps {
                 dY = y / (float)height;
 
                 t = generator.GetValue(dX, dY, 0, true);
-                data.pointData[i].elevation = t;
 
                 d = 1 - Math.Abs(y / halfHeight - 1);
-                t = (3 * d + data.pointData[i].elevation) / 4.0f;
+                t = (3 * d + t) / 4.0f;
                 data.pointData[i].temperature = t;
             }
         }

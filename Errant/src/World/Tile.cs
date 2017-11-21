@@ -1,4 +1,6 @@
-﻿using Microsoft.Xna.Framework.Graphics;
+﻿using Errant.src.World.Generation;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,18 +9,13 @@ using System.Threading.Tasks;
 
 namespace Errant.src.World {
 
-    struct TileData {
-        ushort groundId;
-        ushort objectId;
-    }
-
     class Tile {
-
-        TileData data;
+		
         Texture2D texture;
+		public Color color;
 
-        public Tile(TileData _data) {
-            data = _data;
+        public Tile(PointData pointData) {
+			color = pointData.land ? Color.White : Color.Black;
         }
     }
 }

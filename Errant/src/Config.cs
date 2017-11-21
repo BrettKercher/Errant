@@ -6,6 +6,8 @@ using System.Collections.Generic;
 namespace Errant.src {
     static class Config {
 
+		//TODO: Read in from json/xml
+
         public static readonly Dictionary<WorldSize, Vector2> sizeMap = new Dictionary<WorldSize, Vector2>()
         {
             {   WorldSize.TINY, new Vector2(12, 8)      },
@@ -13,9 +15,9 @@ namespace Errant.src {
             {   WorldSize.MEDIUM, new Vector2(96, 64)   },
             {   WorldSize.LARGE, new Vector2(144, 96)   }
         };
-
-        public static readonly int chuckSize = 32;      // Size in tiles of a chunk
-        public static readonly int tileSize = 32;       // Size in pixels of a tile
+	
+        public static readonly int CHUNK_SIZE = 32;      // Size in tiles of a chunk
+        public static readonly int TILE_SIZE = 32;       // Size in pixels of a tile
 
     }
 }

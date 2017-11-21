@@ -53,7 +53,6 @@ namespace Errant {
 
             spriteBatch.End();
 
-
             base.Draw(gameTime);
         }
 

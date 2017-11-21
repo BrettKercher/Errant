@@ -54,6 +54,7 @@
     <Compile Include="src\GameStates\Overworld.cs" />
     <Compile Include="src\Utilities\FastNoise.cs" />
     <Compile Include="src\Utilities\MathEx.cs" />
+    <Compile Include="src\World\Chunk.cs" />
     <Compile Include="src\World\Generation\BiomeGrower.cs" />
     <Compile Include="src\World\Generation\GenerationData.cs" />
     <Compile Include="src\World\Generation\GenerationSettings.cs" />
@@ -64,6 +65,7 @@
     <Compile Include="src\World\Generation\Steps\GenerateTemperature.cs" />
     <Compile Include="src\World\Generation\Steps\GenerationStep.cs" />
     <Compile Include="src\World\Generation\WorldGenerator.cs" />
+    <Compile Include="src\World\WorldData.cs" />
     <Compile Include="src\World\WorldManager.cs" />
     <Compile Include="src\World\Tile.cs" />
     <Compile Include="src\World\World.cs" />
