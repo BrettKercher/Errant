@@ -6,67 +6,81 @@ using Microsoft.Xna.Framework.Input;
 
 namespace Errant {
 
-    public class GameContext : Game {
-        private GraphicsDeviceManager graphics;
-        private SpriteBatch spriteBatch;
+	public class GameContext : Game {
+		private GraphicsDeviceManager graphics;
+		private SpriteBatch spriteBatch;
 
-        private IGameState currentState;
+		private IGameState currentState;
 
-        public GameContext() {
-            graphics = new GraphicsDeviceManager(this);
-            Content.RootDirectory = "Content";
-        }
+		public GameContext() {
+			graphics = new GraphicsDeviceManager(this);
+			Content.RootDirectory = "Content";
+		}
 
-        protected override void Initialize() {
-            IsMouseVisible = true;
-            SwitchState(new LoadingScreen(this));
-            Camera2D.Init(GraphicsDevice.Viewport);
-            base.Initialize();
-        }
+		protected override void Initialize() {
+			IsMouseVisible = true;
+			SwitchState(new LoadingScreen(this));
+			Camera2D.Init(GraphicsDevice.Viewport);
+			base.Initialize();
+		}
 
-        protected override void LoadContent() {
-            spriteBatch = new SpriteBatch(GraphicsDevice);
-            FontManager.LoadFonts(Content);
-        }
+		protected override void LoadContent() {
+			spriteBatch = new SpriteBatch(GraphicsDevice);
+			FontManager.LoadFonts(Content);
+		}
 
-        protected override void UnloadContent() {
-            currentState.Dispose(Content);
-            Content.Unload();
-        }
+		protected override void UnloadContent() {
+			currentState.Dispose(Content);
+			Content.Unload();
+		}
 
-        protected override void Update(GameTime gameTime) {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape)) {
-                Exit();
-            }
+		protected override void Update(GameTime gameTime) {
+			if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape)) {
+				Exit();
+			}
 
-            currentState.Update(gameTime);
+			currentState.Update(gameTime);
 
-            base.Update(gameTime);
-        }
-        
-        protected override void Draw(GameTime gameTime) {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+			base.Update(gameTime);
+		}
 
-            spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend, null, null, null, null, Camera2D.Instance.TransformMatrix);
+		protected override void Draw(GameTime gameTime) {
 
-            currentState.Draw(gameTime, spriteBatch);
+			GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            spriteBatch.End();
+			spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend, null, null, null, null, Camera2D.Instance.TransformMatrix);
 
-            base.Draw(gameTime);
-        }
+			currentState.Draw(gameTime, spriteBatch);
 
-        public void SwitchState(IGameState newState) {
-            if(newState == null) {
-                return;
-            }
+			spriteBatch.End();
 
-            if(currentState != null) {
-                currentState.Dispose(Content);
-            }
+			base.Draw(gameTime);
+		}
 
-            newState.Initialize(Content);
-            currentState = newState;
-        }
-    }
+		public void SwitchState(IGameState newState) {
+			if (newState == null) {
+				return;
+			}
+
+			if (currentState != null) {
+				currentState.Dispose(Content);
+			}
+
+			newState.Initialize(Content);
+			currentState = newState;
+		}
+	}
 }
+
+
+//GameState = Scene
+
+//GameState has all of the GameObjects in it
+
+//GameState receives Update/Draw/etc[0] calls from GameContext
+
+//GameState dispatches event which all of its objects pick up?
+//OR
+//GameState calls corresponding method for each GameObject
+
+//[0] Constructor, Initialize, Dispose, Update, Draw

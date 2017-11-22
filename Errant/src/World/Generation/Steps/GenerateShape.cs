@@ -13,7 +13,7 @@ namespace Errant.src.World.Generation.Steps {
         readonly float oceanThreshold = 0.075f; //Elevation Threshold for ocean
 
         public GenerateShape(float inWeight) {
-            name = "Generate Climate";
+            name = "Generate Shape";
             description = "Shapin' Things";
             weight = inWeight;
         }

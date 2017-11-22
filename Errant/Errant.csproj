@@ -52,6 +52,7 @@
     <Compile Include="src\GameStates\LoadingScreen.cs" />
     <Compile Include="src\GameStates\MainMenu.cs" />
     <Compile Include="src\GameStates\Overworld.cs" />
+    <Compile Include="src\GameStates\WorldViewer.cs" />
     <Compile Include="src\Utilities\FastNoise.cs" />
     <Compile Include="src\Utilities\MathEx.cs" />
     <Compile Include="src\World\Chunk.cs" />

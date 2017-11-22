@@ -55,7 +55,10 @@ namespace Errant.src.World
 		}
 
 		public Chunk GetChunk(int chunkIndex) {
-			return chunks[chunkIndex];
+			if(chunkIndex >= 0 && chunkIndex < chunks.Length) {
+				return chunks[chunkIndex];
+			}
+			return null;
 		}
 	}
 }
