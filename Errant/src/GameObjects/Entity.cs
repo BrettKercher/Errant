@@ -55,6 +55,7 @@ namespace Errant.src.GameObjects {
             }
         }
 
+        // Register components is called automatically when the entity is added to the scene
         public virtual void RegisterComponents() {
             components.Add(transform);
         }

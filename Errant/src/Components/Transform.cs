@@ -46,6 +46,7 @@ namespace Errant.src.Components {
         }
 
         public override void Update(GameTime gameTime) {
+            rotation += 0.1f;
         }
     }
 }

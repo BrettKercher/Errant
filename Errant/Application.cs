@@ -78,12 +78,3 @@ namespace Errant {
         }
 	}
 }
-
-
-//Scene has all of the GameObjects in it
-
-//Scene receives Update/Draw/etc[0] calls from Application
-
-//Scene calls corresponding method for each GameObject, which calls on components
-
-//[0] Constructor, Initialize, Dispose, Update, Draw

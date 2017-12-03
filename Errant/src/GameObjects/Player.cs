@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Errant.src.Components;
+using Microsoft.Xna.Framework.Content;
 
 namespace Errant.src.GameObjects {
     class Player : Entity {
@@ -19,6 +20,12 @@ namespace Errant.src.GameObjects {
         public override void RegisterComponents() {
             base.RegisterComponents();
             components.Add(renderer);
+        }
+
+        public override void Initialize(ContentManager content) {
+            base.Initialize(content);
+
+            renderer.SetPivot(SpriteRenderer.Pivot.CENTER);
         }
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch) {
