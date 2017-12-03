@@ -2,25 +2,23 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using System.Threading;
-using System.Diagnostics;
 using System.ComponentModel;
 
-namespace Errant.src.GameStates {
-    class LoadingScreen : IGameState {
-
-        private GameContext context = null;
+namespace Errant.src.Scenes {
+    class GenerationScreen : Scene {
+        
         private WorldManager map = null;
-        private BackgroundWorker mapWorker = null;
+        
         private int progress = 0;
 
-        public LoadingScreen(GameContext _context) {
-
-            context = _context;
-
-            // Initialize a BackgroundWorker to build the map
+        public GenerationScreen(Application _application) : base(_application) {
+            application = _application;
             map = new WorldManager();
-            mapWorker = new BackgroundWorker();
+        }
+
+        public override void Initialize(ContentManager content) {
+            // Initialize a BackgroundWorker to build the map
+            BackgroundWorker mapWorker = new BackgroundWorker();
             mapWorker.WorkerReportsProgress = true;
             mapWorker.WorkerSupportsCancellation = true;
             mapWorker.DoWork += OnLoadMapDoWorkHandler;
@@ -29,17 +27,15 @@ namespace Errant.src.GameStates {
             mapWorker.RunWorkerAsync();
         }
 
-        public void Initialize(ContentManager content) {
-        }
-
-        public void Dispose(ContentManager content) {
+        public override void Dispose(ContentManager content) {
             content.Unload();
         }
 
-        public void Update(GameTime gameTime) {
+        public override void Update(GameTime gameTime) {
+            base.Update(gameTime);
         }
 
-        public void Draw(GameTime gameTime, SpriteBatch spriteBatch) {
+        public override void Draw(GameTime gameTime, SpriteBatch spriteBatch) {
             spriteBatch.DrawString(FontManager.DefaultFont(), progress.ToString() + "%", new Vector2(5, 5), Color.White);
         }
 
@@ -58,7 +54,7 @@ namespace Errant.src.GameStates {
         }
 
         private void OnLoadMapCompleteHandler(object sender, RunWorkerCompletedEventArgs e) {
-            context.SwitchState(new Overworld(map));
+            application.SwitchScene(new Overworld(application, map));
         }
     }
 }

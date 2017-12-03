@@ -13,7 +13,7 @@ namespace Errant
         [STAThread]
         static void Main()
         {
-            using (var game = new GameContext())
+            using (var game = new Application())
                 game.Run();
         }
     }

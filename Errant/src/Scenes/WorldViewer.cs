@@ -5,27 +5,28 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 
-namespace Errant.src.GameStates
+namespace Errant.src.Scenes
 {
-	class WorldViewer : IGameState {
+	class WorldViewer : Scene {
 
 		private WorldManager worldManager = null;
 		private int prevScrollValue = 0;
 		private WorldManager.DRAW_MODE worldDrawMode = WorldManager.DRAW_MODE.Biome;
 
-		public WorldViewer(WorldManager manager) {
+		public WorldViewer(Application _application, WorldManager manager) : base(_application) {
 			worldManager = manager;
 		}
 
-		public void Initialize(ContentManager content) {
+		public override void Initialize(ContentManager content) {
 			worldManager.LoadContent(content);
 		}
 
-		public void Dispose(ContentManager content) {
+		public override void Dispose(ContentManager content) {
 
 		}
 
-		public void Update(GameTime gameTime) {
+		public override void Update(GameTime gameTime) {
+            base.Update(gameTime);
 
 			KeyboardState keyboardState = Keyboard.GetState();
 			MouseState mouseState = Mouse.GetState();
@@ -52,7 +53,7 @@ namespace Errant.src.GameStates
 			}
 		}
 
-		public void Draw(GameTime gameTime, SpriteBatch spriteBatch) {
+		public override void Draw(GameTime gameTime, SpriteBatch spriteBatch) {
 			worldManager.DrawWorld(gameTime, spriteBatch, 0, Math.Max(worldManager.GetHeight(), worldManager.GetWidth()));
 		}
 	}
