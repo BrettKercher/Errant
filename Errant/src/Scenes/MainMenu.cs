@@ -12,8 +12,6 @@ namespace Errant.src.Scenes {
         protected PlayerController playerController;
 
         public MainMenu(Application _application) : base(_application) {
-            application = _application;
-
             player = new Player(_application);
             AddEntity(player);
 
@@ -27,7 +25,6 @@ namespace Errant.src.Scenes {
 
         public override void Dispose(ContentManager content) {
             base.Dispose(content);
-            player.Dispose();
         }
 
         public override void Update(GameTime gameTime) {

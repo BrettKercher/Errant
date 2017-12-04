@@ -24,7 +24,7 @@ namespace Errant.src.GameObjects {
 
         public override void Initialize(ContentManager content) {
             base.Initialize(content);
-
+            Camera2D.Instance.SetTarget(transform);
             renderer.SetPivot(SpriteRenderer.Pivot.CENTER);
         }
 

@@ -9,9 +9,7 @@ using System.Threading.Tasks;
 namespace Errant.src.Controllers {
     public class Controller : GameComponent {
 
-        //SHOULD THIS BE A GAMECOMPONENT?
-
-        Entity possessedEntity;
+        protected Entity possessedEntity;
 
         public Controller(Application application) : base(application) {
         }

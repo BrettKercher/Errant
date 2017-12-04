@@ -1,13 +1,11 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Errant.src.Components;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Errant.src {
-    class Camera2D {
+    class Camera2D : GameComponent{
 
         private static Camera2D instance;
 
@@ -17,7 +15,9 @@ namespace Errant.src {
 
         private Rectangle Bounds { get; set; }
 
-        private Camera2D(Viewport viewport) {
+        private Transform target;
+
+        private Camera2D(Application application, Viewport viewport) : base(application) {
             Bounds = viewport.Bounds;
         }
 
@@ -25,8 +25,8 @@ namespace Errant.src {
             get { return instance; }
         }
 
-        public static void Init(Viewport viewPort) {
-            instance = new Camera2D(viewPort);
+        public static void Init(Application application, Viewport viewPort) {
+            instance = new Camera2D(application, viewPort);
         }
 
         public Matrix TransformMatrix {
@@ -63,6 +63,26 @@ namespace Errant.src {
 
         public Vector2 WorldToScreenSpace(Vector2 worldPos) {
             return Vector2.Transform(worldPos, TransformMatrix);
+        }
+
+        public void SetTarget(Transform targetTransform) {
+            target = targetTransform;
+        }
+
+        public override void Update(GameTime gameTime) {
+            base.Update(gameTime);
+
+            if (target == null) {
+                return;
+            }
+
+            MouseState mouseState = Mouse.GetState();
+            Vector2 goalPos;
+            Vector2 mousePos = ScreenToWorldSpace(new Vector2(mouseState.Position.X, mouseState.Position.Y));
+            goalPos = ((3 * target.Position) + mousePos) / 4;
+
+            position = Vector2.Lerp(position, goalPos, 0.1f);
+
         }
     }
 }

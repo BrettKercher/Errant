@@ -24,12 +24,14 @@ namespace Errant {
 			IsMouseVisible = true;
 
             playerController = new PlayerController(this);
-            Components.Add(playerController);
+            
+            SwitchScene(new GenerationScreen(this));
+            Camera2D.Init(this, GraphicsDevice.Viewport);
 
-            // SwitchState(new GenerationScreen(this));
-            SwitchScene(new MainMenu(this));
-            Camera2D.Init(GraphicsDevice.Viewport);
-			base.Initialize();
+            Components.Add(playerController);
+            Components.Add(Camera2D.Instance);
+
+            base.Initialize();
 		}
 
 		protected override void LoadContent() {

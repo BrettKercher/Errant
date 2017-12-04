@@ -11,6 +11,7 @@ namespace Errant.src.Scenes {
         protected List<Entity> entities;
 
         public Scene(Application _application) {
+            application = _application;
             entities = new List<Entity>();
         }
 

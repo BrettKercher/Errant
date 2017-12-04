@@ -16,19 +16,16 @@ namespace Errant.src.GameObjects {
         protected List<ICoreComponent> components;
         protected Transform transform;
 
+        //Movement
+        protected Vector2 movementVector;
+        protected float moveSpeed = 1.0f;
+        private bool wantsToMove = false;
+
         protected Controller controller;
 
         public Entity(Application application) {
             components = new List<ICoreComponent>();
             transform = new Transform(application);
-        }
-
-        public void Dispose() {
-            controller = null;
-        }
-
-        public void Possess(Controller _controller) {
-            controller = _controller;
         }
 
         public virtual void Initialize(ContentManager content) {
@@ -44,6 +41,12 @@ namespace Errant.src.GameObjects {
         }
 
         public virtual void Update(GameTime gameTime) {
+
+            if(wantsToMove) {
+                wantsToMove = false;
+                transform.Position += movementVector;
+            }
+
             foreach (ICoreComponent component in components) {
                 component.Update(gameTime);
             }
@@ -58,6 +61,15 @@ namespace Errant.src.GameObjects {
         // Register components is called automatically when the entity is added to the scene
         public virtual void RegisterComponents() {
             components.Add(transform);
+        }
+
+        public void Possess(Controller _controller) {
+            controller = _controller;
+        }
+
+        public void Move(Vector2 moveVec) {
+            wantsToMove = true;
+            movementVector = moveVec * moveSpeed;
         }
     }
 }
