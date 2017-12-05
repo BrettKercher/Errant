@@ -14,11 +14,11 @@ namespace Errant.src.GameObjects {
 
         //Components
         protected List<ICoreComponent> components;
-        protected Transform transform;
+        public Transform transform;
 
         //Movement
         protected Vector2 movementVector;
-        protected float moveSpeed = 1.0f;
+        protected float moveSpeed = 100.0f;
         private bool wantsToMove = false;
 
         protected Controller controller;
@@ -26,6 +26,15 @@ namespace Errant.src.GameObjects {
         public Entity(Application application) {
             components = new List<ICoreComponent>();
             transform = new Transform(application);
+        }
+
+        public Component GetComponent(Type componentType) {
+            foreach (Component component in components) {
+                if (component.GetType() == componentType) {
+                    return component;
+                }
+            }
+            return null;
         }
 
         public virtual void Initialize(ContentManager content) {

@@ -97,5 +97,21 @@ namespace Errant.src.World {
 				spriteBatch.Draw(tileTexture, new Vector2(xPos, yPos), tiles[i].color);
 			}
 		}
-	}
+
+
+        /// <summary>
+        /// Get the index of the chunk currently occupied by the passed in position
+        /// </summary>
+        /// <param name="position"></param>
+        /// <returns>Chunk Index</returns>
+        public int GetContainingChunkIndex(Vector2 position) {
+
+            int chunkPixelSize = (Config.TILE_SIZE * Config.CHUNK_SIZE);
+
+            int chunkX = (int)Math.Floor(position.X / chunkPixelSize);
+            int chunkY = (int)Math.Floor(position.Y / chunkPixelSize);
+
+            return (chunkY * GetWidth()) + chunkX;
+        }
+    }
 }

@@ -9,7 +9,7 @@ namespace Errant.src {
 
         private static Camera2D instance;
 
-        private float zoom = 1.0f;
+        private float zoom = 0.075f;
         private Vector2 position = new Vector2(0, 0);
         private float rotation = 0.0f;
 
@@ -81,7 +81,7 @@ namespace Errant.src {
             Vector2 mousePos = ScreenToWorldSpace(new Vector2(mouseState.Position.X, mouseState.Position.Y));
             goalPos = ((3 * target.Position) + mousePos) / 4;
 
-            position = Vector2.Lerp(position, goalPos, 0.1f);
+            position = Vector2.Lerp(position, goalPos, 0.075f);
 
         }
     }

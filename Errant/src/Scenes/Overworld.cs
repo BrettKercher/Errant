@@ -5,6 +5,7 @@ using Errant.src.World;
 using Microsoft.Xna.Framework.Input;
 using Errant.src.GameObjects;
 using Errant.src.Controllers;
+using Errant.src.Components;
 
 namespace Errant.src.Scenes {
     class Overworld : Scene {
@@ -12,7 +13,8 @@ namespace Errant.src.Scenes {
         private WorldManager worldManager = null;
 		private static readonly int CHUNK_LOAD_RADIUS = 1;
 
-        protected Entity player;
+        protected Player player;
+        private Transform playerTransform;
         protected PlayerController playerController;
 
         public Overworld(Application _application, WorldManager manager) : base(_application) {
@@ -28,6 +30,7 @@ namespace Errant.src.Scenes {
         public override void Initialize(ContentManager content) {
             base.Initialize(content);
             worldManager.LoadContent(content);
+            playerTransform = (Transform)player.GetComponent(typeof(Transform));
         }
 
         public override void Dispose(ContentManager content) {
@@ -41,7 +44,8 @@ namespace Errant.src.Scenes {
         }
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch) {
-			worldManager.DrawWorld(gameTime, spriteBatch, 1, CHUNK_LOAD_RADIUS);
+			worldManager.DrawWorld(gameTime, spriteBatch, 
+                worldManager.GetContainingChunkIndex(playerTransform.Position), CHUNK_LOAD_RADIUS);
             base.Draw(gameTime, spriteBatch);
         }
     }
