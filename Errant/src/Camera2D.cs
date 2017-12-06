@@ -9,7 +9,7 @@ namespace Errant.src {
 
         private static Camera2D instance;
 
-        private float zoom = 0.075f;
+        private float zoom = 1.0f;
         private Vector2 position = new Vector2(0, 0);
         private float rotation = 0.0f;
 

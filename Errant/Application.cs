@@ -1,6 +1,8 @@
 ﻿using Errant.src;
 using Errant.src.Controllers;
 using Errant.src.Scenes;
+using GeonBit.UI;
+using GeonBit.UI.Entities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -25,8 +27,8 @@ namespace Errant {
 
             playerController = new PlayerController(this);
             
-            SwitchScene(new GenerationScreen(this));
             Camera2D.Init(this, GraphicsDevice.Viewport);
+            SwitchScene(new GenerationScreen(this));
 
             Components.Add(playerController);
             Components.Add(Camera2D.Instance);
@@ -46,7 +48,8 @@ namespace Errant {
 
 		protected override void Update(GameTime gameTime) {
 			currentScene.Update(gameTime);
-			base.Update(gameTime);
+
+            base.Update(gameTime);
 		}
 
 		protected override void Draw(GameTime gameTime) {
@@ -59,7 +62,7 @@ namespace Errant {
 
 			spriteBatch.End();
 
-			base.Draw(gameTime);
+            base.Draw(gameTime);
 		}
 
 		public void SwitchScene(Scene newScene) {
