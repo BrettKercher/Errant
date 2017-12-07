@@ -45,15 +45,12 @@ namespace Errant.src.World.Generation.Steps {
                 // Calculate Shape
                 e1 = 1 - Math.Abs(shapeGenerator1.GetValue(dX, dY, 0, true));
 
-                data.pointData[i].debugValue1 = e1;
-
                 e1 *= 0.1f;
                 e1 = (e1 * 2) - 1;
 
                 ddX = dX + e1;
                 ddY = dY + e1;
                 
-                data.pointData[i].debugValue2 = shapeGenerator2.GetValue(dX, dY, 0, true);
                 e1 = shapeGenerator2.GetValue(ddX, ddY, 0, true);
 
                 d = MathEx.EuclideanDistanceCenter(x, y, data.width, data.height);

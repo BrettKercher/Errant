@@ -83,6 +83,9 @@ namespace Errant.src {
 
             position = Vector2.Lerp(position, goalPos, 0.075f);
 
+//             position.X = (float)Math.Round(position.X);
+//             position.Y = (float)Math.Round(position.Y);
+
         }
     }
 }

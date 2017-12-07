@@ -1,4 +1,5 @@
-﻿using Errant.src.World.Generation;
+﻿using Errant.src.Graphics;
+using Errant.src.World.Generation;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -28,14 +29,19 @@ namespace Errant.src.World {
 		private WorldData worldData;
 		private WorldGenerator generator;
 
-		private Texture2D tileTexture;
+        private TileAtlas tileAtlas;
+        private readonly int ATLAS_ROWS = 15;
+        private readonly int ATLAS_COLUMNS = 15;
+
+// 		private Texture2D tileTexture;
 
 		public WorldManager() {
 			generator = new WorldGenerator();
 		}
 
 		public void LoadContent(ContentManager content) {
-			tileTexture = content.Load<Texture2D>("sprites/tile");
+            Texture2D tileMap = content.Load<Texture2D>("sprites/tileMap");
+            tileAtlas = new TileAtlas(tileMap, ATLAS_COLUMNS, ATLAS_ROWS, Config.TILE_SIZE, Config.TILE_SIZE);
 		}
 
 		public int GetWidth() {
@@ -94,7 +100,9 @@ namespace Errant.src.World {
 
 				xPos = chunkOffsetX + (x * Config.TILE_SIZE);
 				yPos = chunkOffsetY + (y * Config.TILE_SIZE);
-				spriteBatch.Draw(tileTexture, new Vector2(xPos, yPos), tiles[i].color);
+                int textureRegionIndex = (tiles[i].TextureRegionRow * ATLAS_COLUMNS) + 14;
+                TextureRegion2D textureRegion = tileAtlas.GetTextureRegion(textureRegionIndex);
+                spriteBatch.Draw(textureRegion.Texture, new Vector2(xPos, yPos), textureRegion.SourceRectangle, Color.White);
 			}
 		}
 

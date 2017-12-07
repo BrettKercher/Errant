@@ -56,7 +56,15 @@ namespace Errant {
 
 			GraphicsDevice.Clear(Color.CornflowerBlue);
 
-			spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend, null, null, null, null, Camera2D.Instance.TransformMatrix);
+			spriteBatch.Begin(
+                SpriteSortMode.BackToFront, 
+                BlendState.AlphaBlend, 
+                SamplerState.PointClamp, 
+                null, 
+                null, 
+                null, 
+                Camera2D.Instance.TransformMatrix
+            );
 
 			currentScene.Draw(gameTime, spriteBatch);
 

@@ -1,4 +1,5 @@
-﻿using Errant.src.World.Generation;
+﻿using Errant.src.Graphics;
+using Errant.src.World.Generation;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
@@ -7,34 +8,34 @@ namespace Errant.src.World {
 
     class Tile {
 
-		private static Dictionary<BIOME, Color> biomeColorMap = new Dictionary<BIOME, Color>() {
-			{ BIOME.NONE, Color.Blue },
-			{ BIOME.ONE, Color.White },
-			{ BIOME.TWO, Color.Gray },
-			{ BIOME.THREE, Color.Cyan },
-			{ BIOME.FOUR, Color.Green },
-			{ BIOME.FIVE, Color.SaddleBrown },
-			{ BIOME.SIX, Color.ForestGreen },
-			{ BIOME.SEVEN, Color.DarkOliveGreen },
-			{ BIOME.EIGHT, Color.SpringGreen },
-			{ BIOME.NINE, Color.LawnGreen },
-			{ BIOME.TEN, Color.Yellow },
-			{ BIOME.ELEVEN, Color.Red },
-			{ BIOME.TWELVE, Color.OrangeRed },
+		private static Dictionary<BIOME, int> biomeAtlasRowMap = new Dictionary<BIOME, int>() {
+			{ BIOME.NONE, 0 },
+			{ BIOME.ONE, 1 },
+			{ BIOME.TWO, 2 },
+			{ BIOME.THREE, 3 },
+			{ BIOME.FOUR, 4 },
+			{ BIOME.FIVE, 5 },
+			{ BIOME.SIX, 6 },
+			{ BIOME.SEVEN, 7 },
+			{ BIOME.EIGHT, 8 },
+			{ BIOME.NINE, 9 },
+			{ BIOME.TEN, 10 },
+			{ BIOME.ELEVEN, 11 },
+			{ BIOME.TWELVE, 12 },
 		};
 
-		Texture2D texture;
-		public Color color;
+		public int TextureRegionRow { get; private set; }
 
         public Tile(PointData pointData) {
-			color = pointData.land ? Color.White : Color.Black;
 
-			if (pointData.land) {
-				color = biomeColorMap[pointData.biome];
-			}
-			else {
-				color = Color.DarkBlue;
-			}
+            TextureRegionRow = biomeAtlasRowMap[pointData.biome];
+// 
+// 			if (pointData.land) {
+//                 TextureRegionIndex = 29;
+// 			}
+// 			else {
+//                 TextureRegionIndex = 14;
+//             }
 		}
 	}
 }

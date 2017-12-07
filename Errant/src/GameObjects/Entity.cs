@@ -18,7 +18,7 @@ namespace Errant.src.GameObjects {
 
         //Movement
         protected Vector2 movementVector;
-        protected float moveSpeed = 1.0f;
+        protected float moveSpeed = 10.0f;
         private bool wantsToMove = false;
 
         protected Controller controller;

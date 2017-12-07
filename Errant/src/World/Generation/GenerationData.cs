@@ -38,8 +38,5 @@ namespace Errant.src.World.Generation {
         public float moisture;
         public float elevation;
 
-        public float debugValue1;
-        public float debugValue2;
-
     }
 }
