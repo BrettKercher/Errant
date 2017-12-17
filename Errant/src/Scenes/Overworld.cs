@@ -13,6 +13,8 @@ namespace Errant.src.Scenes {
         private WorldManager worldManager = null;
 		private static readonly int CHUNK_LOAD_RADIUS = 1;
 
+        private MouseState prevMouseState;
+
         protected Player player;
         private Transform playerTransform;
         protected PlayerController playerController;
@@ -25,12 +27,16 @@ namespace Errant.src.Scenes {
 
             playerController = application.GetPlayerController();
             playerController.Possess(player);
+
+            prevMouseState = Mouse.GetState();
         }
 
         public override void Initialize(ContentManager content) {
             base.Initialize(content);
             worldManager.LoadContent(content);
             playerTransform = (Transform)player.GetComponent(typeof(Transform));
+            playerTransform.Position = new Vector2(208 * Config.TILE_SIZE, 144 * Config.TILE_SIZE);
+            Camera2D.Instance.MoveTo(playerTransform.Position);
         }
 
         public override void Dispose(ContentManager content) {
@@ -39,8 +45,19 @@ namespace Errant.src.Scenes {
 
         public override void Update(GameTime gameTime) {
             base.Update(gameTime);
-            KeyboardState keyboardState = Keyboard.GetState();
+
             MouseState mouseState = Mouse.GetState();
+
+            if(mouseState.LeftButton == ButtonState.Released && prevMouseState.LeftButton == ButtonState.Pressed) {
+
+                Vector2 tilePos = Camera2D.Instance.ScreenToWorldSpace(new Vector2(mouseState.X, mouseState.Y));
+                int tileX = (int)(tilePos.X / Config.TILE_SIZE);
+                int tileY = (int)(tilePos.Y / Config.TILE_SIZE);
+
+                worldManager.PrintTileData(tileX, tileY);
+            }
+
+            prevMouseState = mouseState;
         }
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch) {

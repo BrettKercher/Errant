@@ -58,6 +58,7 @@
     <Compile Include="src\GameState.cs" />
     <Compile Include="src\Graphics\TextureRegion2D.cs" />
     <Compile Include="src\Graphics\TileAtlas.cs" />
+    <Compile Include="src\Ids\GroundTileIds.cs" />
     <Compile Include="src\Scenes\Scene.cs" />
     <Compile Include="src\ICoreComponent.cs" />
     <Compile Include="src\Scenes\GenerationScreen.cs" />

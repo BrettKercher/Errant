@@ -39,8 +39,8 @@ namespace Errant.src {
             }
         }
 
-        public void PanTo(Vector2 newPosition) {
-
+        public void MoveTo(Vector2 newPosition) {
+            position = newPosition;
         }
 
         public void Zoom(float zoomAmount) {
@@ -49,7 +49,7 @@ namespace Errant.src {
 
         }
 
-        public void Move(Vector2 moveAmount) {
+        public void Pan(Vector2 moveAmount) {
             position += moveAmount;
         }
 
@@ -83,8 +83,8 @@ namespace Errant.src {
 
             position = Vector2.Lerp(position, goalPos, 0.075f);
 
-//             position.X = (float)Math.Round(position.X);
-//             position.Y = (float)Math.Round(position.Y);
+            position.X = (float)Math.Round(position.X, 1);
+            position.Y = (float)Math.Round(position.Y, 1);
 
         }
     }

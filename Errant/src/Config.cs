@@ -17,5 +17,9 @@ namespace Errant.src {
 
 		public static readonly int CHUNK_SIZE = 32;      // Size in tiles of a chunk
 		public static readonly int TILE_SIZE = 32;       // Size in pixels of a tile
+
+        public static readonly int GROUND_LAYER = 1;
+        public static readonly int GROUND_TRANSITION_LAYER = 2;
+        public static readonly int PLAYER_LAYER = 3;
 	}
 }

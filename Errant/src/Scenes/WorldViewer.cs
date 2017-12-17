@@ -32,19 +32,19 @@ namespace Errant.src.Scenes
 			MouseState mouseState = Mouse.GetState();
 
 			if (keyboardState.IsKeyDown(Keys.W) || keyboardState.IsKeyDown(Keys.Up)) {
-				Camera2D.Instance.Move(new Vector2(0, -100));
+				Camera2D.Instance.Pan(new Vector2(0, -100));
 			}
 
 			if (keyboardState.IsKeyDown(Keys.A) || keyboardState.IsKeyDown(Keys.Left)) {
-				Camera2D.Instance.Move(new Vector2(-100, 0));
+				Camera2D.Instance.Pan(new Vector2(-100, 0));
 			}
 
 			if (keyboardState.IsKeyDown(Keys.S) || keyboardState.IsKeyDown(Keys.Down)) {
-				Camera2D.Instance.Move(new Vector2(0, 100));
+				Camera2D.Instance.Pan(new Vector2(0, 100));
 			}
 
 			if (keyboardState.IsKeyDown(Keys.D) || keyboardState.IsKeyDown(Keys.Right)) {
-				Camera2D.Instance.Move(new Vector2(100, 0));
+				Camera2D.Instance.Pan(new Vector2(100, 0));
 			}
 
 			if (prevScrollValue != mouseState.ScrollWheelValue) {
@@ -54,7 +54,7 @@ namespace Errant.src.Scenes
 		}
 
 		public override void Draw(GameTime gameTime, SpriteBatch spriteBatch) {
-			worldManager.DrawWorld(gameTime, spriteBatch, 0, Math.Max(worldManager.GetHeight(), worldManager.GetWidth()));
+			worldManager.DrawWorld(gameTime, spriteBatch, 0, Math.Max(worldManager.GetHeightInChunks(), worldManager.GetWidthInChunks()));
 		}
 	}
 }

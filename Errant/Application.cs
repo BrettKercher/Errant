@@ -19,7 +19,9 @@ namespace Errant {
 
         public Application() {
 			graphics = new GraphicsDeviceManager(this);
-			Content.RootDirectory = "Content";
+            graphics.PreferredBackBufferWidth = 1600;
+            graphics.PreferredBackBufferHeight = 900;
+            Content.RootDirectory = "Content";
         }
 
 		protected override void Initialize() {
@@ -57,7 +59,7 @@ namespace Errant {
 			GraphicsDevice.Clear(Color.CornflowerBlue);
 
 			spriteBatch.Begin(
-                SpriteSortMode.BackToFront, 
+                SpriteSortMode.Deferred, 
                 BlendState.AlphaBlend, 
                 SamplerState.PointClamp, 
                 null, 

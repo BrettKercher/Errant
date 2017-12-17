@@ -9,11 +9,6 @@ using System.ComponentModel;
 
 namespace Errant.src.World {
 
-	struct DrawParams {
-		public Color color;
-		public Texture2D texture;
-	}
-
 	class WorldManager {
 
 		public enum DRAW_MODE {
@@ -30,10 +25,8 @@ namespace Errant.src.World {
 		private WorldGenerator generator;
 
         private TileAtlas tileAtlas;
-        private readonly int ATLAS_ROWS = 15;
-        private readonly int ATLAS_COLUMNS = 15;
-
-// 		private Texture2D tileTexture;
+        private readonly int ATLAS_ROWS = 32;
+        private readonly int ATLAS_COLUMNS = 32;
 
 		public WorldManager() {
 			generator = new WorldGenerator();
@@ -44,12 +37,12 @@ namespace Errant.src.World {
             tileAtlas = new TileAtlas(tileMap, ATLAS_COLUMNS, ATLAS_ROWS, Config.TILE_SIZE, Config.TILE_SIZE);
 		}
 
-		public int GetWidth() {
-			return worldData.GetWidth();
+		public int GetWidthInChunks() {
+			return worldData.GetWidth() / Config.CHUNK_SIZE;
 		}
 
-		public int GetHeight() {
-			return worldData.GetHeight();
+		public int GetHeightInChunks() {
+			return worldData.GetHeight() / Config.CHUNK_SIZE;
 		}
 
 		public void GenerateWorld(GenerationSettings settings, BackgroundWorker worker = null) {
@@ -64,32 +57,33 @@ namespace Errant.src.World {
 		public void DrawWorld(GameTime gameTime, SpriteBatch spriteBatch, int origin, int viewDistance) {
 			int chunkIndex, y, x;
 
-			int originX = origin % GetWidth();
-			int originY = origin / GetWidth();
+			int originX = origin % GetWidthInChunks();
+			int originY = origin / GetWidthInChunks();
 
 			for (y = originY - viewDistance; y <= originY + viewDistance; y++) {
-				if (y < 0 || y >= GetHeight()) { continue; }
+				if (y < 0 || y >= GetHeightInChunks()) { continue; }
 				for (x = originX - viewDistance; x <= originX + viewDistance; x++) {
-					if(x < 0 || x >= GetWidth()) { continue; }
-					chunkIndex = (y * GetWidth()) + x;
-					DrawChunk(gameTime, spriteBatch, chunkIndex);
+					if(x < 0 || x >= GetWidthInChunks()) { continue; }
+					chunkIndex = (y * GetWidthInChunks()) + x;
+                    DrawChunk(gameTime, spriteBatch, chunkIndex);
 				}
 			}
 		}
 
 		private void DrawChunk(GameTime gameTime, SpriteBatch spriteBatch, int chunkIndex) {
-			Chunk chunk = worldData.GetChunk(chunkIndex);
+
+			Chunk chunk = worldData.LoadChunk(chunkIndex);
 			if (chunk == null) {
 				return;
 			}
 
-			Tile[] tiles = chunk.GetTiles();
+			ActiveTile[] tiles = chunk.GetTiles();
 
 			int x, y;
 			int xPos, yPos;
 
-			int chunkX = chunkIndex % GetWidth();
-			int chunkY = chunkIndex / GetWidth();
+			int chunkX = chunkIndex % GetWidthInChunks();
+			int chunkY = chunkIndex / GetWidthInChunks();
 
 			int chunkOffsetX = chunkX * Config.CHUNK_SIZE * Config.TILE_SIZE;
 			int chunkOffsetY = chunkY * Config.CHUNK_SIZE * Config.TILE_SIZE;
@@ -100,12 +94,9 @@ namespace Errant.src.World {
 
 				xPos = chunkOffsetX + (x * Config.TILE_SIZE);
 				yPos = chunkOffsetY + (y * Config.TILE_SIZE);
-                int textureRegionIndex = (tiles[i].TextureRegionRow * ATLAS_COLUMNS) + 14;
-                TextureRegion2D textureRegion = tileAtlas.GetTextureRegion(textureRegionIndex);
-                spriteBatch.Draw(textureRegion.Texture, new Vector2(xPos, yPos), textureRegion.SourceRectangle, Color.White);
+                tiles[i].Draw(spriteBatch, tileAtlas, xPos, yPos);
 			}
 		}
-
 
         /// <summary>
         /// Get the index of the chunk currently occupied by the passed in position
@@ -119,7 +110,15 @@ namespace Errant.src.World {
             int chunkX = (int)Math.Floor(position.X / chunkPixelSize);
             int chunkY = (int)Math.Floor(position.Y / chunkPixelSize);
 
-            return (chunkY * GetWidth()) + chunkX;
+            return (chunkY * GetWidthInChunks()) + chunkX;
+        }
+
+        public void PrintTileData(int tileX, int tileY) {
+            ActiveTile tile = worldData.GetActiveTile((tileY * worldData.GetWidth()) + tileX);
+
+            tile.PrintDebugInfo();
+
+
         }
     }
 }

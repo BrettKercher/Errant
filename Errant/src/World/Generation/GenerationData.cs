@@ -8,18 +8,18 @@ namespace Errant.src.World.Generation {
 
     public enum BIOME {
         NONE = 0,
-        ONE,
-        TWO,
-        THREE,
-        FOUR,
-        FIVE,
-        SIX,
-        SEVEN,
-        EIGHT,
-        NINE,
-        TEN,
-        ELEVEN,
-        TWELVE,
+        OCEAN,
+        PLAINS,
+        JUNGLE,
+        SWAMP,
+        SAVANNA,
+        FOREST,
+        ICE_PLAINS,
+        TAIGA,
+        ALPS,
+        DESERT,
+        MESA,
+        VOLCANIC,
     }
 
     struct GenerationData {

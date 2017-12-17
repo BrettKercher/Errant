@@ -8,14 +8,14 @@ namespace Errant.src.World
 {
 	class Chunk
 	{
-		Tile[] tiles;
+		ActiveTile[] tiles;
 
 		public Chunk()
 		{
-			tiles = new Tile[Config.CHUNK_SIZE * Config.CHUNK_SIZE];
+			tiles = new ActiveTile[Config.CHUNK_SIZE * Config.CHUNK_SIZE];
 		}
 
-		public Tile[] GetTiles()
+		public ActiveTile[] GetTiles()
 		{
 			return tiles;
 		}

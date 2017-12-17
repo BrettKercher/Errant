@@ -6,9 +6,10 @@ namespace Errant.src.World.Generation.Steps {
     class GenerateBiomes : GenerationStep {
 
         private readonly List<BIOME>[] biomes = {
-            new List<BIOME>() { BIOME.ONE, BIOME.TWO, BIOME.THREE },
-            new List<BIOME>() { BIOME.FOUR, BIOME.FIVE, BIOME.SIX, BIOME.SEVEN, BIOME.EIGHT, BIOME.NINE },
-            new List<BIOME>() { BIOME.TEN, BIOME.ELEVEN, BIOME.TWELVE },
+            new List<BIOME>() { BIOME.ICE_PLAINS, BIOME.TAIGA, BIOME.ALPS },
+            new List<BIOME>() { BIOME.PLAINS, BIOME.JUNGLE, BIOME.SWAMP },
+            new List<BIOME>() { BIOME.PLAINS, BIOME.FOREST, BIOME.SAVANNA },
+            new List<BIOME>() { BIOME.DESERT, BIOME.MESA, BIOME.VOLCANIC },
         };
 
         private readonly int BIOME_DENSITY = 16;
@@ -43,6 +44,7 @@ namespace Errant.src.World.Generation.Steps {
 			fractals = new List<BiomeGrower>((BIOME_DENSITY - 1) * (BIOME_DENSITY - 1));
 			int coldBiomeThreshold = height / 3;	//Below = cold biome
 			int warmBiomeThresold = 2 * height / 3;	//Above = warm biome
+            int center = height / 2;
 
 			for (int i = 1; i < BIOME_DENSITY; i++) {
 				y = (i * yStep);
@@ -50,10 +52,10 @@ namespace Errant.src.World.Generation.Steps {
 					tIndex = 0;
 				}
 				else if (y < warmBiomeThresold) {
-					tIndex = 1;
-				}
-				else {
-					tIndex = 2;
+                    tIndex = y < center ? 1 : 2;
+                }
+                else {
+                    tIndex = 3;
 				}
 				for (int j = 1; j < BIOME_DENSITY; j++)
 				{
