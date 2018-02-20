@@ -6,14 +6,14 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Errant.src.Graphics {
-    class TileAtlas {
+    class TextureAtlas {
 
         private TextureRegion2D[] textures;
 
         public int Width { get; private set; }
         public int Height { get; private set; }
 
-        public TileAtlas(Texture2D texture, int width, int height, int textureWidth, int textureHeight) {
+        public TextureAtlas(Texture2D texture, int width, int height, int textureWidth, int textureHeight) {
             textures = new TextureRegion2D[width * height];
 
             Width = width;

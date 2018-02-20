@@ -18,7 +18,7 @@ namespace Errant.src.Controllers {
             base.Update(gameTime);
         }
 
-        public void Possess(Entity entity) {
+        public virtual void Possess(Entity entity) {
             possessedEntity = entity;
             entity.Possess(this);
         }

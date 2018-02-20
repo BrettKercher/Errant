@@ -18,7 +18,7 @@ namespace Errant.src.GameObjects {
 
         //Movement
         protected Vector2 movementVector;
-        protected float moveSpeed = 10.0f;
+        protected float moveSpeed = 2.5f;
         private bool wantsToMove = false;
 
         protected Controller controller;
@@ -72,7 +72,7 @@ namespace Errant.src.GameObjects {
             components.Add(transform);
         }
 
-        public void Possess(Controller _controller) {
+        public virtual void Possess(Controller _controller) {
             controller = _controller;
         }
 

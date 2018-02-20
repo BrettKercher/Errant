@@ -1,4 +1,5 @@
 ﻿using Errant.src.Graphics;
+using Errant.src.Loaders;
 using Errant.src.World.Generation;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -25,7 +26,10 @@ namespace Errant.src.World {
 			{ BIOME.VOLCANIC, GroundIds.Basalt },
 		};
 
-		public ushort GroundTileId { get; private set; }
+        static Random rng = new Random();
+
+        public ushort GroundTileId { get; private set; }
+        public ushort ObjectTileId { get; private set; }
 
         public PersistentTile(PointData pointData) {
 
@@ -34,7 +38,18 @@ namespace Errant.src.World {
 			if (!pointData.land) {
                 GroundTileId = GroundIds.Water;
 			}
-		}
+
+            if (rng.NextDouble() > 0.975f) {
+                ObjectTileId = 1;
+            } 
+            else if (rng.NextDouble() > 0.95f) {
+                ObjectTileId = 2;
+            }
+            else {
+                ObjectTileId = 0;
+            }
+
+        }
 	}
 
     class ActiveTile {
@@ -46,12 +61,6 @@ namespace Errant.src.World {
 
         List<KeyValuePair<ushort, byte>> transitionData;
 
-        public ushort GroundId {
-            get {
-                return persistentTile.GroundTileId;
-            }
-        }
-
         public ActiveTile(PersistentTile _persistentTile) {
             persistentTile = _persistentTile;
             edgeTransitionData = new Dictionary<ushort, byte>();
@@ -59,30 +68,29 @@ namespace Errant.src.World {
             transitionData = new List<KeyValuePair<ushort, byte>>();
         }
 
-        public void Draw(SpriteBatch spriteBatch, TileAtlas tileAtlas, int xPos, int yPos) {
-            int textureRegionIndex = (GroundId * tileAtlas.Width);
+        public void DrawGround(SpriteBatch spriteBatch, TextureAtlas tileAtlas, int xPos, int yPos) {
+
+            // Draw base Ground Texture
+            int textureRegionIndex = (persistentTile.GroundTileId * tileAtlas.Width);
             TextureRegion2D textureRegion = tileAtlas.GetTextureRegion(textureRegionIndex);
             spriteBatch.Draw(textureRegion.Texture, new Vector2(xPos, yPos), textureRegion.SourceRectangle, Color.White);
 
+            // Draw transition textures
             foreach (KeyValuePair<ushort, byte> kvp in transitionData) {
                 textureRegionIndex = (kvp.Key * tileAtlas.Width) + kvp.Value;
                 textureRegion = tileAtlas.GetTextureRegion(textureRegionIndex);
                 spriteBatch.Draw(textureRegion.Texture, new Vector2(xPos, yPos), textureRegion.SourceRectangle, Color.White);
             }
+        }
 
-//             var sortedTransitions = from entry in cornerTransitionData orderby Array.IndexOf(GroundIds.priorities, entry.Key) ascending select entry;
-//             foreach (KeyValuePair<ushort, byte> kvp in sortedTransitions) {
-//                 textureRegionIndex = (kvp.Key * tileAtlas.Width) + 16 + kvp.Value;
-//                 textureRegion = tileAtlas.GetTextureRegion(textureRegionIndex);
-//                 spriteBatch.Draw(textureRegion.Texture, new Vector2(xPos, yPos), textureRegion.SourceRectangle, Color.White);
-//             }
-// 
-//             sortedTransitions = from entry in edgeTransitionData orderby Array.IndexOf(GroundIds.priorities, entry.Key) ascending select entry;
-//             foreach (KeyValuePair<ushort, byte> kvp in sortedTransitions) {
-//                 textureRegionIndex = (kvp.Key * tileAtlas.Width) + kvp.Value;
-//                 textureRegion = tileAtlas.GetTextureRegion(textureRegionIndex);
-//                 spriteBatch.Draw(textureRegion.Texture, new Vector2(xPos, yPos), textureRegion.SourceRectangle, Color.White);
-//             }
+        public void DrawObject(SpriteBatch spriteBatch, int xPos, int yPos) {
+
+            if (persistentTile.ObjectTileId == 0) {
+                return;
+            }
+
+            TextureRegion2D region = ObjectManager.GetObjectTextureRegionById(persistentTile.ObjectTileId);
+            spriteBatch.Draw(region.Texture, new Vector2(xPos, yPos), region.SourceRectangle, Color.White);
         }
 
         public void IncrementEdgeTransition(ushort tileType, byte direction) {
@@ -123,7 +131,7 @@ namespace Errant.src.World {
 
         public void PrintDebugInfo() {
             System.Diagnostics.Debug.WriteLine("===================================");
-            System.Diagnostics.Debug.WriteLine("Ground Id: " + GroundId);
+            System.Diagnostics.Debug.WriteLine("Ground Id: " + persistentTile.GroundTileId);
             System.Diagnostics.Debug.WriteLine("-----");
             System.Diagnostics.Debug.WriteLine("EdgeTransitions: ");
             foreach (KeyValuePair<ushort, byte> kvp in edgeTransitionData) {

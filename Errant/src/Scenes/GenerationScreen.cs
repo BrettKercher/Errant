@@ -1,4 +1,5 @@
-﻿using Errant.src.World;
+﻿using Errant.src.Loaders;
+using Errant.src.World;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -28,7 +29,6 @@ namespace Errant.src.Scenes {
         }
 
         public override void Dispose(ContentManager content) {
-            content.Unload();
         }
 
         public override void Update(GameTime gameTime) {

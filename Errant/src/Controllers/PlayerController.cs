@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Errant.src.GameObjects;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
 namespace Errant.src.Controllers {
@@ -8,16 +9,33 @@ namespace Errant.src.Controllers {
 
         }
 
+        public override void Possess(Entity entity) {
+            possessedEntity = entity;
+            entity.Possess(this);
+        }
+
         public override void Update(GameTime gameTime) {
             base.Update(gameTime);
 
-            if (possessedEntity == null) {
+            Player playerEntity = (Player) possessedEntity;
+
+            if (playerEntity == null) {
                 return;
             }
 
-            KeyboardState keyboardState = Keyboard.GetState();
+            ProcessMovement();
+
             MouseState mouseState = Mouse.GetState();
 
+            if (mouseState.LeftButton == ButtonState.Pressed) {
+                Vector2 tilePos = Camera2D.Instance.ScreenToWorldSpace(new Vector2(mouseState.X, mouseState.Y));
+                int tileX = (int)(tilePos.X / Config.TILE_SIZE);
+                int tileY = (int)(tilePos.Y / Config.TILE_SIZE);
+            }
+        }
+
+        private void ProcessMovement() {
+            KeyboardState keyboardState = Keyboard.GetState();
             Vector2 movementVector = new Vector2(0, 0);
             if (keyboardState.IsKeyDown(Keys.W) || keyboardState.IsKeyDown(Keys.Up)) {
                 movementVector.Y -= 1;

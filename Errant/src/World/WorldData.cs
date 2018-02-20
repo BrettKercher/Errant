@@ -17,14 +17,14 @@ namespace Errant.src.World
 
         private Dictionary<int, Chunk> loadedChunks;
 
-        Dictionary<byte, Vector2> edgeOffsets = new Dictionary<byte, Vector2>() {
+        private readonly Dictionary<byte, Vector2> edgeOffsets = new Dictionary<byte, Vector2>() {
                 { 1, new Vector2(1, 0) },
                 { 2, new Vector2(0, 1)  },
                 { 4, new Vector2(-1, 0)  },
                 { 8, new Vector2(0, -1) },
             };
 
-        Dictionary<byte, Vector2> cornerOffsets = new Dictionary<byte, Vector2>() {
+        private readonly Dictionary<byte, Vector2> cornerOffsets = new Dictionary<byte, Vector2>() {
                 { 1, new Vector2(1, 1)  },
                 { 2, new Vector2(-1, 1) },
                 { 4, new Vector2(-1, -1)},
@@ -92,9 +92,9 @@ namespace Errant.src.World
 
             int i, j;
             int chunkX, chunkY;
-			int startTileX, startTileY;
-			int pointIndex, tileIndex;
-			ActiveTile[] tiles;
+            int startTileX, startTileY;
+            int pointIndex, tileIndex;
+            ActiveTile[] tiles;
             
             tiles = chunk.GetTiles();
             chunkX = chunkIndex % (width / Config.CHUNK_SIZE);

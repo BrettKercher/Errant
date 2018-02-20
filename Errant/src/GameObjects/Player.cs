@@ -35,5 +35,7 @@ namespace Errant.src.GameObjects {
         public override void Update(GameTime gameTime) {
             base.Update(gameTime);
         }
+
+        
     }
 }

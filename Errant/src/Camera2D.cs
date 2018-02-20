@@ -79,7 +79,7 @@ namespace Errant.src {
             MouseState mouseState = Mouse.GetState();
             Vector2 goalPos;
             Vector2 mousePos = ScreenToWorldSpace(new Vector2(mouseState.Position.X, mouseState.Position.Y));
-            goalPos = ((3 * target.Position) + mousePos) / 4;
+            goalPos = ((7 * target.Position) + mousePos) / 8;
 
             position = Vector2.Lerp(position, goalPos, 0.075f);
 

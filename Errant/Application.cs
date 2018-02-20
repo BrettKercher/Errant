@@ -1,8 +1,7 @@
 ﻿using Errant.src;
 using Errant.src.Controllers;
+using Errant.src.Loaders;
 using Errant.src.Scenes;
-using GeonBit.UI;
-using GeonBit.UI.Entities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -41,7 +40,8 @@ namespace Errant {
 		protected override void LoadContent() {
 			spriteBatch = new SpriteBatch(GraphicsDevice);
 			FontManager.LoadFonts(Content);
-		}
+            ObjectManager.LoadObjects(Content);
+        }
 
 		protected override void UnloadContent() {
 			currentScene.Dispose(Content);

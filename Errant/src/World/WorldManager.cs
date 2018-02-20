@@ -24,18 +24,18 @@ namespace Errant.src.World {
 		private WorldData worldData;
 		private WorldGenerator generator;
 
-        private TileAtlas tileAtlas;
-        private readonly int ATLAS_ROWS = 32;
-        private readonly int ATLAS_COLUMNS = 32;
+        private TextureAtlas groundTileAtlas;
+        private readonly int TILE_ROWS = 32;
+        private readonly int TILE_COLUMNS = 32;
 
-		public WorldManager() {
+        public WorldManager() {
 			generator = new WorldGenerator();
 		}
 
 		public void LoadContent(ContentManager content) {
             Texture2D tileMap = content.Load<Texture2D>("sprites/tileMap");
-            tileAtlas = new TileAtlas(tileMap, ATLAS_COLUMNS, ATLAS_ROWS, Config.TILE_SIZE, Config.TILE_SIZE);
-		}
+            groundTileAtlas = new TextureAtlas(tileMap, TILE_COLUMNS, TILE_ROWS, Config.TILE_SIZE, Config.TILE_SIZE);
+        }
 
 		public int GetWidthInChunks() {
 			return worldData.GetWidth() / Config.CHUNK_SIZE;
@@ -94,8 +94,9 @@ namespace Errant.src.World {
 
 				xPos = chunkOffsetX + (x * Config.TILE_SIZE);
 				yPos = chunkOffsetY + (y * Config.TILE_SIZE);
-                tiles[i].Draw(spriteBatch, tileAtlas, xPos, yPos);
-			}
+                tiles[i].DrawGround(spriteBatch, groundTileAtlas, xPos, yPos);
+                tiles[i].DrawObject(spriteBatch, xPos, yPos);
+            }
 		}
 
         /// <summary>
@@ -117,8 +118,6 @@ namespace Errant.src.World {
             ActiveTile tile = worldData.GetActiveTile((tileY * worldData.GetWidth()) + tileX);
 
             tile.PrintDebugInfo();
-
-
         }
     }
 }
