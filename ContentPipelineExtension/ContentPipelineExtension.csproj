@@ -44,6 +44,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ItemStoreImporter.cs" />
+    <Compile Include="ItemStoreProcessor.cs" />
+    <Compile Include="ItemStoreWriter.cs" />
     <Compile Include="ObjectStoreImporter.cs" />
     <Compile Include="ObjectStoreProcessor.cs" />
     <Compile Include="ObjectStoreWriter.cs" />

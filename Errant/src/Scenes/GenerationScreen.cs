@@ -36,7 +36,7 @@ namespace Errant.src.Scenes {
         }
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch) {
-            spriteBatch.DrawString(FontManager.DefaultFont(), progress.ToString() + "%", new Vector2(5, 5), Color.White);
+            spriteBatch.DrawString(FontManager.DefaultFont(), progress + "%", new Vector2(5, 5), Color.White);
         }
 
         private void OnLoadMapDoWorkHandler(object sender, DoWorkEventArgs e) {
@@ -55,6 +55,7 @@ namespace Errant.src.Scenes {
 
         private void OnLoadMapCompleteHandler(object sender, RunWorkerCompletedEventArgs e) {
             application.SwitchScene(new Overworld(application, map));
+//            application.SwitchScene(new WorldViewer(application, map));
         }
     }
 }

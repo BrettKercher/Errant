@@ -40,8 +40,13 @@ namespace Errant {
 		protected override void LoadContent() {
 			spriteBatch = new SpriteBatch(GraphicsDevice);
 			FontManager.LoadFonts(Content);
-            ObjectManager.LoadObjects(Content);
-        }
+			ObjectManager.LoadObjects(Content);
+			ItemManager.LoadItems(Content);
+
+			int t = ItemManager.GetItemDefinitionById(1).UseType;
+			
+			System.Diagnostics.Debug.WriteLine("Use Type: " + t);
+		}
 
 		protected override void UnloadContent() {
 			currentScene.Dispose(Content);

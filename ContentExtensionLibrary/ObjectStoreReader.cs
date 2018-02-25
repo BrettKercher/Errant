@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Microsoft.Xna.Framework;
+﻿using System.Collections.Generic;
 using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.Graphics;
 
 using TRead = ContentExtensionLibrary.ObjectStore;
 
@@ -26,8 +22,7 @@ namespace ContentExtensionLibrary {
                 objs.Add(obj);
             }
 
-            var objStore = new ObjectStore();
-            objStore.Objects = objs;
+            var objStore = new ObjectStore {Objects = objs};
 
             return objStore;
         }

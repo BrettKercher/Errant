@@ -8,8 +8,6 @@ using System.Threading.Tasks;
 namespace Errant.src.World.Generation.Steps {
     class GenerateMoisture : GenerationStep {
 
-        bool once = false;
-
         public GenerateMoisture(float inWeight) {
             name = "Generate Moisture";
             description = "Moist";
@@ -21,7 +19,6 @@ namespace Errant.src.World.Generation.Steps {
             int height = data.height;
             int x, y;
             float dX, dY, m;
-            float halfHeight = height * 0.5f;
 
             NoiseWrapper generator = new NoiseWrapper(
                 FastNoise.NoiseType.SimplexFractal, FastNoise.FractalType.FBM, 9.5f, 0.9f, 8, rng.Next()

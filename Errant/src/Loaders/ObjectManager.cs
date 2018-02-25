@@ -15,8 +15,6 @@ namespace Errant.src.Loaders {
         private static Dictionary<int, ObjectDefinition> objectMap;
         private static Dictionary<string, TextureAtlas> objectTextureMaps;
 
-        static Texture2D texture;
-
         public static void LoadObjects(ContentManager content) {
             objectMap = new Dictionary<int, ObjectDefinition>();
             objectTextureMaps = new Dictionary<string, TextureAtlas>();

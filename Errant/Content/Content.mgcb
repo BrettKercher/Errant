@@ -4844,3 +4844,8 @@
 /processorParam:TextureFormat=Color
 /build:sprites/objects/test.png
 
+#begin data/items_01.itemStore
+/importer:ItemStoreImporter
+/processor:ItemStoreProcessor
+/build:data/items_01.itemStore
+

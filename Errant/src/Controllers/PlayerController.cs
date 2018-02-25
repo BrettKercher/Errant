@@ -1,12 +1,14 @@
-﻿using Errant.src.GameObjects;
+﻿using System;
+using Errant.src.GameObjects;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
 namespace Errant.src.Controllers {
     public class PlayerController : Controller {
+        private MouseState previousMouseState;
 
         public PlayerController(Application _application) : base(_application) {
-
+            previousMouseState = Mouse.GetState();
         }
 
         public override void Possess(Entity entity) {
@@ -28,10 +30,15 @@ namespace Errant.src.Controllers {
             MouseState mouseState = Mouse.GetState();
 
             if (mouseState.LeftButton == ButtonState.Pressed) {
+                var firstClick = previousMouseState.LeftButton == ButtonState.Released;
+                
                 Vector2 tilePos = Camera2D.Instance.ScreenToWorldSpace(new Vector2(mouseState.X, mouseState.Y));
                 int tileX = (int)(tilePos.X / Config.TILE_SIZE);
                 int tileY = (int)(tilePos.Y / Config.TILE_SIZE);
+                playerEntity.UseActiveItem(firstClick, tileX, tileY);
             }
+
+            previousMouseState = mouseState;
         }
 
         private void ProcessMovement() {

@@ -28,8 +28,8 @@ namespace Errant.src.GameObjects {
             transform = new Transform(application);
         }
 
-        public Component GetComponent(Type componentType) {
-            foreach (Component component in components) {
+        public ICoreComponent GetComponent(Type componentType) {
+            foreach (ICoreComponent component in components) {
                 if (component.GetType() == componentType) {
                     return component;
                 }
@@ -72,7 +72,7 @@ namespace Errant.src.GameObjects {
             components.Add(transform);
         }
 
-        public virtual void Possess(Controller _controller) {
+        public void Possess(Controller _controller) {
             controller = _controller;
         }
 
