@@ -23,6 +23,7 @@ namespace ContentPipelineExtension {
                 output.Write(item.Melee);
                 output.Write(item.Ranged);
                 output.Write(item.Magic);
+                output.Write(item.Tool);
                 output.Write(item.Consumable);
                 output.Write(item.PlacedObject);
                 output.Write(item.PlacedGround);

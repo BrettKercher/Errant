@@ -22,6 +22,7 @@ namespace Errant.src.World {
 		}
 
 		private WorldData worldData;
+		private WorldSerializer serializer;
 		private WorldGenerator generator;
 
         private TextureAtlas groundTileAtlas;
@@ -30,6 +31,7 @@ namespace Errant.src.World {
 
         public WorldManager() {
 			generator = new WorldGenerator();
+	        serializer = new WorldSerializer();
 		}
 
 		public void LoadContent(ContentManager content) {
@@ -48,11 +50,17 @@ namespace Errant.src.World {
 		public void GenerateWorld(GenerationSettings settings, BackgroundWorker worker = null) {
 			GenerationData genData = generator.Generate(settings, worker);
 			worldData = new WorldData(genData);
+//			SaveWorld();
+//			LoadWorld();
 		}
 
-		public void SaveWorld() { }
+		public void SaveWorld() {
+			serializer.Serialize(worldData);
+		}
 
-		public void LoadWorld() { }
+		public void LoadWorld() {
+			worldData = serializer.Deserialize();
+		}
 
 		public void DrawWorld(GameTime gameTime, SpriteBatch spriteBatch, int origin, int viewDistance) {
 			int chunkIndex, y, x;
@@ -113,6 +121,27 @@ namespace Errant.src.World {
 
             return (chunkY * GetWidthInChunks()) + chunkX;
         }
+		
+		/// <summary>
+		/// Removes the object at the given location
+		/// </summary>
+		/// <param name="tileX">Global x tile position of the object to remove</param>
+		/// <param name="tileY">Global y tile position of the object to remove</param>
+		public void RemoveObjectAt(int tileX, int tileY) {
+			ActiveTile tile = worldData.GetActiveTile(tileX, tileY);
+			tile.ClearObject();
+		}
+		
+		/// <summary>
+		/// Place the given object At the given location
+		/// </summary>
+		/// <param name="objId">Id of the object to place</param>
+		/// <param name="tileX">Global x tile position of the object to remove</param>
+		/// <param name="tileY">Global y tile position of the object to remove</param>
+		public void PlaceObjectAt(ushort objId, int tileX, int tileY) {
+			ActiveTile tile = worldData.GetActiveTile(tileX, tileY);
+			tile.PlaceObject(objId);
+		}
 
         public void PrintTileData(int tileX, int tileY) {
             ActiveTile tile = worldData.GetActiveTile((tileY * worldData.GetWidth()) + tileX);

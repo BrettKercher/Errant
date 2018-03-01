@@ -9,7 +9,7 @@ using System.Linq;
 
 namespace Errant.src.World {
 
-    class PersistentTile {
+    public class PersistentTile {
 
 		private static Dictionary<BIOME, ushort> biomeGroundIdMap = new Dictionary<BIOME, ushort>() {
 			{ BIOME.OCEAN, GroundIds.Water },
@@ -28,8 +28,10 @@ namespace Errant.src.World {
 
         static Random rng = new Random();
 
-        public ushort GroundTileId { get; private set; }
-        public ushort ObjectTileId { get; private set; }
+        public ushort GroundTileId { get; set; }
+        public ushort ObjectTileId { get; set; }
+        
+        public PersistentTile() {  }
 
         public PersistentTile(PointData pointData) {
 
@@ -48,11 +50,14 @@ namespace Errant.src.World {
             else {
                 ObjectTileId = 0;
             }
+        }
 
+        public void ClearObject() {
+            ObjectTileId = 0;
         }
 	}
 
-    class ActiveTile {
+    public class ActiveTile {
 
         private PersistentTile persistentTile;
 
@@ -127,6 +132,14 @@ namespace Errant.src.World {
                     return a.CompareTo(b);
                 }
             );
+        }
+
+        public void ClearObject() {
+            persistentTile.ClearObject();
+        }
+        
+        public void PlaceObject(ushort objectId) {
+            persistentTile.ObjectTileId = objectId;
         }
 
         public void PrintDebugInfo() {

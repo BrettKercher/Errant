@@ -27,9 +27,10 @@ namespace ContentExtensionLibrary {
                 item.Melee = input.ReadBoolean();
                 item.Ranged = input.ReadBoolean();
                 item.Magic = input.ReadBoolean();
+                item.Tool = input.ReadBoolean();
                 item.Consumable = input.ReadBoolean();
-                item.PlacedObject = input.ReadInt32();
-                item.PlacedGround = input.ReadInt32();
+                item.PlacedObject = input.ReadUInt16();
+                item.PlacedGround = input.ReadUInt16();
                 item.Damage = input.ReadInt32();
 
                 items.Add(item);

@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Errant.src.Components;
 using Errant.src.Loaders;
 using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Input;
 
 namespace Errant.src.GameObjects {
     class Player : Entity {
@@ -23,9 +24,17 @@ namespace Errant.src.GameObjects {
             inventory = new Inventory(application, 10);
             hotBar = new Inventory(application, 10);
 
-            hotBar.AddFirstAvailable(new ItemStack {
+            hotBar.AddFirstAvailable(new ItemStack(application) {
                 ItemCount = 1,
                 ItemId = 1
+            });
+            hotBar.AddFirstAvailable(new ItemStack(application) {
+                ItemCount = 999,
+                ItemId = 2
+            });
+            hotBar.AddFirstAvailable(new ItemStack(application) {
+                ItemCount = 999,
+                ItemId = 3
             });
         }
 
@@ -49,6 +58,18 @@ namespace Errant.src.GameObjects {
         }
 
         public override void Update(GameTime gameTime) {
+            
+            KeyboardState keyboardState = Keyboard.GetState();
+            if (keyboardState.IsKeyDown(Keys.D1)) {
+                activeIndex = 0;
+            }
+            else if (keyboardState.IsKeyDown(Keys.D2)) {
+                activeIndex = 1;
+            }
+            else if (keyboardState.IsKeyDown(Keys.D3)) {
+                activeIndex = 2;
+            }
+            
             base.Update(gameTime);
         }
 

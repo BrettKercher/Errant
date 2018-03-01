@@ -8,12 +8,11 @@
 			"SpriteIndex": 0,
 			"Width": 1,
 			"Height": 1,
-			"ProficiencyGroup": 0,
-			"UseType": 1,
 			"UseCooldown": 1,
 			"Melee": true,
 			"Damage": 10,
-			"AutoUsable": true
+			"AutoUsable": true,
+			"Tool": true
 		},
 		{
 			"Id": 2,
@@ -23,7 +22,20 @@
 			"SpriteIndex": 1,
 			"Width": 1,
 			"Height": 1,
-			"UseType": 0,
+			"MaxStackSize": 999
+		},
+		{
+			"Id": 3,
+			"Name": "Acorn",
+			"Tooltip": "Grows a Tree",
+			"SpriteMapLocation": "sprites/objects/test",
+			"SpriteIndex": 2,
+			"Width": 1,
+			"Height": 1,
+			"Consumable": true,
+			"AutoUsable": false,
+			"UseCooldown": 1,
+			"PlacedObject": 2,
 			"MaxStackSize": 999
 		}
 	]

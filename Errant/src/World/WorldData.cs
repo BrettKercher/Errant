@@ -9,30 +9,31 @@ using System.Threading.Tasks;
 
 namespace Errant.src.World
 {
-	class WorldData
-	{
-		int width;		// Width of the world in chunks
-		int height;     // Height of the world in chunks
-        PersistentTile[] tileData;
+	public class WorldData {
+	    public string name = "test";
+	    public string versionNumber = "0.1.0";
+	    
+	    private int width;		// Width of the world in tiles
+	    private int height;     // Height of the world in tiles
+        private PersistentTile[] tileData;
 
         private Dictionary<int, Chunk> loadedChunks;
 
-        private readonly Dictionary<byte, Vector2> edgeOffsets = new Dictionary<byte, Vector2>() {
+        private readonly Dictionary<byte, Vector2> edgeOffsets = new Dictionary<byte, Vector2> {
                 { 1, new Vector2(1, 0) },
                 { 2, new Vector2(0, 1)  },
                 { 4, new Vector2(-1, 0)  },
                 { 8, new Vector2(0, -1) },
             };
 
-        private readonly Dictionary<byte, Vector2> cornerOffsets = new Dictionary<byte, Vector2>() {
+        private readonly Dictionary<byte, Vector2> cornerOffsets = new Dictionary<byte, Vector2> {
                 { 1, new Vector2(1, 1)  },
                 { 2, new Vector2(-1, 1) },
                 { 4, new Vector2(-1, -1)},
                 { 8, new Vector2(1, -1) },
             };
 
-        public WorldData(GenerationData genData)
-		{
+        public WorldData(GenerationData genData) {
             int i;
             int numTiles = genData.pointData.Length;
             tileData = new PersistentTile[numTiles];
@@ -45,39 +46,61 @@ namespace Errant.src.World
                 tileData[i] = new PersistentTile(genData.pointData[i]);
             }
         }
+	    
+	    public WorldData() {
+	        loadedChunks = new Dictionary<int, Chunk>();
+	    }
 
-		public int GetWidth()
-		{
+	    public PersistentTile[] GetTileData() {
+	        return tileData;
+	    }
+
+		public int GetWidth() {
 			return width;
 		}
 
-		public int GetHeight()
-		{
+		public int GetHeight() {
 			return height;
 		}
+
+	    public void SetDimensions(int w, int h) {
+	        width = w;
+		    height = h;
+	        int i;
+	        int numTiles = w * h;
+	        tileData = new PersistentTile[numTiles];
+
+	        for (i = 0; i < numTiles; i++) {
+	            tileData[i] = new PersistentTile();
+	        }
+	    }
 
         public PersistentTile GetPersistentTile(int tileIndex) {
             return tileData[tileIndex];
         }
 
+	    public ActiveTile GetActiveTile(int tileX, int tileY) {
+	        int localTileX = tileX % Config.CHUNK_SIZE;
+	        int localTileY = tileY % Config.CHUNK_SIZE;
+
+	        int chunkX = tileX / Config.CHUNK_SIZE;
+	        int chunkY = tileY / Config.CHUNK_SIZE;
+
+	        int chunkIndex = (chunkY * (width / Config.CHUNK_SIZE)) + chunkX;
+
+	        Chunk chunk;
+	        if(!loadedChunks.TryGetValue(chunkIndex, out chunk)) {
+	            return null;
+	        }
+
+	        return chunk.GetTiles()[(localTileY * Config.CHUNK_SIZE) + localTileX];
+	    }
+
         public ActiveTile GetActiveTile(int tileIndex) {
             int tileX = tileIndex % width;
             int tileY = tileIndex / width;
 
-            int localTileX = tileX % Config.CHUNK_SIZE;
-            int localTileY = tileY % Config.CHUNK_SIZE;
-
-            int chunkX = tileX / Config.CHUNK_SIZE;
-            int chunkY = tileY / Config.CHUNK_SIZE;
-
-            int chunkIndex = (chunkY * (width / Config.CHUNK_SIZE)) + chunkX;
-
-            Chunk chunk;
-            if(!loadedChunks.TryGetValue(chunkIndex, out chunk)) {
-                return null;
-            }
-
-            return chunk.GetTiles()[(localTileY * Config.CHUNK_SIZE) + localTileX];
+            return GetActiveTile(tileX, tileY);
         }
 
         public Chunk LoadChunk(int chunkIndex) {

@@ -22,10 +22,12 @@ namespace Errant.src.GameObjects {
         private bool wantsToMove = false;
 
         protected Controller controller;
+        protected Application application;
 
         public Entity(Application application) {
             components = new List<ICoreComponent>();
             transform = new Transform(application);
+            this.application = application;
         }
 
         public ICoreComponent GetComponent(Type componentType) {
@@ -53,7 +55,11 @@ namespace Errant.src.GameObjects {
 
             if(wantsToMove) {
                 wantsToMove = false;
-                transform.Position += movementVector;
+                var transformPosition = transform.Position;
+                transformPosition += movementVector;
+                transformPosition.X = (float)Math.Round(transformPosition.X, 1);
+                transformPosition.Y = (float)Math.Round(transformPosition.Y, 1);
+                transform.Position = transformPosition;
             }
 
             foreach (ICoreComponent component in components) {

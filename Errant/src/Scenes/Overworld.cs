@@ -10,14 +10,14 @@ using Errant.src.Components;
 namespace Errant.src.Scenes {
     class Overworld : Scene {
         
-        private WorldManager worldManager = null;
+        private WorldManager worldManager;
 		private static readonly int CHUNK_LOAD_RADIUS = 1;
 
         private MouseState prevMouseState;
 
-        protected Player player;
+        private Player player;
         private Transform playerTransform;
-        protected PlayerController playerController;
+        private PlayerController playerController;
 
         public Overworld(Application _application, WorldManager manager) : base(_application) {
             worldManager = manager;
@@ -54,7 +54,7 @@ namespace Errant.src.Scenes {
                 int tileX = (int)(tilePos.X / Config.TILE_SIZE);
                 int tileY = (int)(tilePos.Y / Config.TILE_SIZE);
 
-                worldManager.PrintTileData(tileX, tileY);
+                // worldManager.PrintTileData(tileX, tileY);
             }
 
             prevMouseState = mouseState;
@@ -64,6 +64,10 @@ namespace Errant.src.Scenes {
 			worldManager.DrawWorld(gameTime, spriteBatch, 
                 worldManager.GetContainingChunkIndex(playerTransform.Position), CHUNK_LOAD_RADIUS);
             base.Draw(gameTime, spriteBatch);
+        }
+
+        public WorldManager GetWorldManager() {
+            return worldManager;
         }
     }
 }

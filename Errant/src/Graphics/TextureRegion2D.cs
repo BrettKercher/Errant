@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Errant.src.Graphics {
-    class TextureRegion2D {
+    public class TextureRegion2D {
 
         public TextureRegion2D(Texture2D texture, int x, int y, int width, int height ) {
             Texture = texture;

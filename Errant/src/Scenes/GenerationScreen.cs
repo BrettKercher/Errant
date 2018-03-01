@@ -54,8 +54,8 @@ namespace Errant.src.Scenes {
         }
 
         private void OnLoadMapCompleteHandler(object sender, RunWorkerCompletedEventArgs e) {
-            application.SwitchScene(new Overworld(application, map));
-//            application.SwitchScene(new WorldViewer(application, map));
+//            application.SwitchScene(new Overworld(application, map));
+            application.SwitchScene(new WorldViewer(application, map));
         }
     }
 }

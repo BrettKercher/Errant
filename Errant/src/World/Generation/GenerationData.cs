@@ -22,13 +22,13 @@ namespace Errant.src.World.Generation {
         VOLCANIC,
     }
 
-    struct GenerationData {
+    public struct GenerationData {
         public int width;
         public int height;
         public PointData[] pointData;
     }
 
-    struct PointData {
+    public struct PointData {
         public int x;
         public int y;
         public BIOME biome;

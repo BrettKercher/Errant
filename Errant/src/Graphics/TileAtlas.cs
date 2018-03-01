@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Errant.src.Graphics {
-    class TextureAtlas {
+    public class TextureAtlas {
 
         private TextureRegion2D[] textures;
 

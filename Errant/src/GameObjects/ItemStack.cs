@@ -1,11 +1,18 @@
-﻿using ContentExtensionLibrary;
+﻿using System;
+using ContentExtensionLibrary;
 using Errant.src.Loaders;
+using Errant.src.Scenes;
 
 namespace Errant.src.GameObjects {
-    public class ItemStack {
+    public class ItemStack : Entity {
         
         public int ItemId { get; set; }
         public int ItemCount { get; set; }
+
+        private DateTime lastUsedTime = DateTime.MinValue;
+        
+        public ItemStack(Application application) : base(application) {
+        }
 
         public void Use(bool firstClick, int targetTileX, int targetTileY) {
             ItemDefinition itemDef = ItemManager.GetItemDefinitionById(ItemId);
@@ -18,15 +25,30 @@ namespace Errant.src.GameObjects {
             if (!itemDef.AutoUsable && !firstClick) {
                 return;
             }
+
+            if (DateTime.Now.CompareTo(lastUsedTime.AddSeconds(itemDef.UseCooldown)) < 0) {
+                return;
+            }
+            
+            lastUsedTime = DateTime.Now;
+
+            if (itemDef.Tool) {
+                // tool, harvest object at tile location
+                Overworld overworld = (Overworld)application.GetCurrentScene();
+                overworld.GetWorldManager().RemoveObjectAt(targetTileX, targetTileY);
+            }
+
+            if (itemDef.PlacedObject > 0) {
+                Overworld overworld = (Overworld)application.GetCurrentScene();
+                overworld.GetWorldManager().PlaceObjectAt(itemDef.PlacedObject, targetTileX, targetTileY);
+            }
+
+            if (itemDef.Consumable) {
+                ItemCount--;
+                if (ItemCount == 0) {
+                    //delete
+                }
+            }
         }
     }
 }
-
-
-// item types:
-// tool - use = activate (pickaxe swing, staff cast)
-// consumable - use = consume (potions, food)
-// placeable object - use = place (tiles, chests, furnaces)
-// placeable wall
-// placeable floor
-// equipment - use = nothing (armor, accessory)

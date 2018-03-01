@@ -33,7 +33,7 @@ namespace ContentExtensionLibrary {
         
         // Category of behavior when the item is used. EG: A potion is consumed, while a sword is swung)
         // 0 = Nothing Happens
-        // 1 = Swing/Attack/Harvest
+        // 1 = Harvest Object
         public int UseType { get; set; }
         
         // Can the item be used repeatedly with a press-and-hold of the use button
@@ -51,14 +51,17 @@ namespace ContentExtensionLibrary {
         // Item Deals Magic Damage
         public bool Magic { get; set; }
         
+        // Item is capable of harvesting Objects
+        public bool Tool { get; set; }
+        
         // Wether or not the item should be consumed on use
         public bool Consumable { get; set; }
         
         // Item that should be placed when used
-        public int PlacedObject { get; set; }
+        public ushort PlacedObject { get; set; }
         
         // Ground that should be placed when used
-        public int PlacedGround { get; set; }
+        public ushort PlacedGround { get; set; }
         
         public int Damage { get; set; }
         

@@ -2,6 +2,5 @@
 
 namespace Errant.src.World {
     class World {
-
     }
 }

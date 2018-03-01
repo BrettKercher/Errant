@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Errant.src.World
 {
-	class Chunk
+	public class Chunk
 	{
 		ActiveTile[] tiles;
 

@@ -87,6 +87,7 @@
     <Compile Include="src\World\WorldManager.cs" />
     <Compile Include="src\World\Tile.cs" />
     <Compile Include="src\World\World.cs" />
+    <Compile Include="src\World\WorldSerializer.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="DataTypes, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">

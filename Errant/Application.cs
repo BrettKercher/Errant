@@ -96,5 +96,9 @@ namespace Errant {
         public PlayerController GetPlayerController() {
             return playerController;
         }
+
+		public Scene GetCurrentScene() {
+			return currentScene;
+		}
 	}
 }
