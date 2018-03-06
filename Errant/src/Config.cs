@@ -1,4 +1,5 @@
-﻿using Errant.src.World;
+﻿using System;
+using Errant.src.World;
 using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 
@@ -21,5 +22,12 @@ namespace Errant.src {
         public static readonly int GROUND_LAYER = 1;
         public static readonly int GROUND_TRANSITION_LAYER = 2;
         public static readonly int PLAYER_LAYER = 3;
+
+		public static string WorldSaveDirectory {
+			get {
+				var appData = Environment.GetEnvironmentVariable("APPDATA");
+				return appData + "\\Errant\\Worlds\\";
+			}
+		}
 	}
 }

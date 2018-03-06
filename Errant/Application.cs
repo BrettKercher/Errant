@@ -1,7 +1,10 @@
-﻿using Errant.src;
+﻿using System.Runtime.CompilerServices;
+using Errant.src;
 using Errant.src.Controllers;
 using Errant.src.Loaders;
 using Errant.src.Scenes;
+using GeonBit.UI;
+using GeonBit.UI.Entities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -9,6 +12,7 @@ using Microsoft.Xna.Framework.Input;
 namespace Errant {
 
 	public class Application : Game {
+		
 		private GraphicsDeviceManager graphics;
 		private SpriteBatch spriteBatch;
 
@@ -24,12 +28,14 @@ namespace Errant {
         }
 
 		protected override void Initialize() {
-			IsMouseVisible = true;
 
             playerController = new PlayerController(this);
+			
+			UserInterface.Initialize(Content, BuiltinThemes.hd);
+			UserInterface.Active.UseRenderTarget = true;
             
             Camera2D.Init(this, GraphicsDevice.Viewport);
-            SwitchScene(new GenerationScreen(this));
+            SwitchScene(new MainMenu(this));
 
             Components.Add(playerController);
             Components.Add(Camera2D.Instance);
@@ -42,10 +48,6 @@ namespace Errant {
 			FontManager.LoadFonts(Content);
 			ObjectManager.LoadObjects(Content);
 			ItemManager.LoadItems(Content);
-
-			int t = ItemManager.GetItemDefinitionById(1).UseType;
-			
-			System.Diagnostics.Debug.WriteLine("Use Type: " + t);
 		}
 
 		protected override void UnloadContent() {
@@ -55,12 +57,14 @@ namespace Errant {
 
 		protected override void Update(GameTime gameTime) {
 			currentScene.Update(gameTime);
-
+			UserInterface.Active.Update(gameTime);
             base.Update(gameTime);
 		}
 
 		protected override void Draw(GameTime gameTime) {
 
+			UserInterface.Active.Draw(spriteBatch);
+			
 			GraphicsDevice.Clear(Color.CornflowerBlue);
 
 			spriteBatch.Begin(
@@ -76,7 +80,8 @@ namespace Errant {
 			currentScene.Draw(gameTime, spriteBatch);
 
 			spriteBatch.End();
-
+			
+			UserInterface.Active.DrawMainRenderTarget(spriteBatch);
             base.Draw(gameTime);
 		}
 
@@ -99,6 +104,10 @@ namespace Errant {
 
 		public Scene GetCurrentScene() {
 			return currentScene;
+		}
+
+		public void Quit() {
+			Exit();
 		}
 	}
 }

@@ -50,16 +50,15 @@ namespace Errant.src.World {
 		public void GenerateWorld(GenerationSettings settings, BackgroundWorker worker = null) {
 			GenerationData genData = generator.Generate(settings, worker);
 			worldData = new WorldData(genData);
-//			SaveWorld();
-//			LoadWorld();
+			worldData.name = settings.name;
 		}
 
 		public void SaveWorld() {
 			serializer.Serialize(worldData);
 		}
 
-		public void LoadWorld() {
-			worldData = serializer.Deserialize();
+		public void LoadWorld(string worldName) {
+			worldData = serializer.Deserialize(worldName);
 		}
 
 		public void DrawWorld(GameTime gameTime, SpriteBatch spriteBatch, int origin, int viewDistance) {

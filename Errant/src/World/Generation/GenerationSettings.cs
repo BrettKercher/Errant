@@ -8,7 +8,8 @@ namespace Errant.src.World {
         LARGE = 3
     }
 
-    class GenerationSettings {
+    public class GenerationSettings {
+        public string name;
         public WorldSize size;
         public int seed;
     }

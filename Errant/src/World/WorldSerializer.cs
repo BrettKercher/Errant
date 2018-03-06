@@ -9,7 +9,6 @@ namespace Errant.src.World {
         private FileStream fileStream;
 
         private const string fileExtension = ".world";
-        private const string saveLocation = "C:/Worlds/";
         private const int bytesPerTile = 3; //Number of bytes used to repesent a single tile
         private const int numSections = 10;
 
@@ -24,12 +23,15 @@ namespace Errant.src.World {
             ObjectIdIsShort = 1 << 6
         }
 
+        public WorldSerializer() {
+        }
+
         public void Serialize(WorldData world) {
-            if (!Directory.Exists(saveLocation)) {
-                Directory.CreateDirectory(saveLocation);
+            if (!Directory.Exists(Config.WorldSaveDirectory)) {
+                Directory.CreateDirectory(Config.WorldSaveDirectory);
             }
 
-            fileStream = new FileStream(saveLocation + world.name + fileExtension, FileMode.Create, FileAccess.Write);
+            fileStream = new FileStream(Config.WorldSaveDirectory + world.name + fileExtension, FileMode.Create, FileAccess.Write);
             writer = new BinaryWriter(fileStream);
             int[] sectionPointers = new int[numSections];
 
@@ -101,15 +103,15 @@ namespace Errant.src.World {
             }
         }
 
-        public WorldData Deserialize() {
+        public WorldData Deserialize(string worldName) {
             WorldData worldData = new WorldData();
 
-            if (!File.Exists(saveLocation + "test" + fileExtension)) {
+            if (!File.Exists(Config.WorldSaveDirectory + worldName + fileExtension)) {
                 System.Diagnostics.Debug.WriteLine("Attempted to load a World that doesn't Exist!");
                 return null;
             }
 
-            using (fileStream = new FileStream(saveLocation + "test" + fileExtension, FileMode.Open)) {
+            using (fileStream = new FileStream(Config.WorldSaveDirectory + worldName + fileExtension, FileMode.Open)) {
                 using (reader = new BinaryReader(fileStream)) {
                     try {
                         int[] array;

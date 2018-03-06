@@ -6,14 +6,26 @@ using Microsoft.Xna.Framework.Graphics;
 using System.ComponentModel;
 
 namespace Errant.src.Scenes {
-    class GenerationScreen : Scene {
+    public class GenerationScreen : Scene {
         
-        private WorldManager map = null;
-        
-        private int progress = 0;
+        private WorldManager map;
+        private int progress;
+        private GenerationSettings genSettings;
+        private bool loadExistingWorld;
 
-        public GenerationScreen(Application _application) : base(_application) {
+        public GenerationScreen(Application _application, GenerationSettings settings = null, bool load = false) : base(_application) {
             application = _application;
+            genSettings = settings;
+
+            loadExistingWorld = load;
+            
+            if (settings == null) {
+                genSettings = new GenerationSettings();
+                genSettings.name = "default";
+                genSettings.size = WorldSize.TINY;
+                genSettings.seed = 0;
+            }
+            
             map = new WorldManager();
         }
 
@@ -42,11 +54,13 @@ namespace Errant.src.Scenes {
         private void OnLoadMapDoWorkHandler(object sender, DoWorkEventArgs e) {
             BackgroundWorker worker = sender as BackgroundWorker;
 
-            GenerationSettings genSettings = new GenerationSettings();
-            genSettings.size = WorldSize.TINY;
-            genSettings.seed = 0;
-
-            map.GenerateWorld(genSettings, worker);
+            if (!loadExistingWorld) {
+                map.GenerateWorld(genSettings, worker);
+                map.SaveWorld();
+            }
+            else {
+                map.LoadWorld(genSettings.name);
+            }
         }
 
         private void OnLoadMapProgressChangedHandler(object sender, ProgressChangedEventArgs e) {
@@ -54,8 +68,8 @@ namespace Errant.src.Scenes {
         }
 
         private void OnLoadMapCompleteHandler(object sender, RunWorkerCompletedEventArgs e) {
-//            application.SwitchScene(new Overworld(application, map));
-            application.SwitchScene(new WorldViewer(application, map));
+            application.SwitchScene(new Overworld(application, map));
+//            application.SwitchScene(new WorldViewer(application, map));
         }
     }
 }
