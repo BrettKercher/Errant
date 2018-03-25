@@ -13,7 +13,7 @@
     <AssemblyName>Errant</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <MonoGamePlatform>DesktopGL</MonoGamePlatform>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
@@ -64,6 +64,8 @@
     <Compile Include="src\Ids\ObjectIds.cs" />
     <Compile Include="src\Loaders\ItemManager.cs" />
     <Compile Include="src\Loaders\ObjectManager.cs" />
+    <Compile Include="src\NetworkManager.cs" />
+    <Compile Include="src\Scenes\NetworkConnect.cs" />
     <Compile Include="src\Scenes\Scene.cs" />
     <Compile Include="src\ICoreComponent.cs" />
     <Compile Include="src\Scenes\GenerationScreen.cs" />
@@ -97,6 +99,9 @@
     <Reference Include="GeonBit.UI, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\GeonBit.UI.3.0.2.2\lib\geonbitui\GeonBit.UI.dll</HintPath>
       <Private>True</Private>
+    </Reference>
+    <Reference Include="Lidgren.Network, Version=2012.1.7.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\packages\Lidgren.Network.1.0.2\lib\net451\Lidgren.Network.dll</HintPath>
     </Reference>
     <Reference Include="MonoGame.Framework">
       <HintPath>$(MonoGameInstallDirectory)\MonoGame\v3.0\Assemblies\DesktopGL\MonoGame.Framework.dll</HintPath>

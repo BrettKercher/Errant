@@ -10,21 +10,11 @@ namespace Errant.src.Scenes {
         
         private WorldManager map;
         private int progress;
-        private GenerationSettings genSettings;
-        private bool loadExistingWorld;
+        private GenerationSettings generationSettings;
 
-        public GenerationScreen(Application _application, GenerationSettings settings = null, bool load = false) : base(_application) {
+        public GenerationScreen(Application _application, GenerationSettings genSettings) : base(_application) {
             application = _application;
-            genSettings = settings;
-
-            loadExistingWorld = load;
-            
-            if (settings == null) {
-                genSettings = new GenerationSettings();
-                genSettings.name = "default";
-                genSettings.size = WorldSize.TINY;
-                genSettings.seed = 0;
-            }
+            generationSettings = genSettings;
             
             map = new WorldManager();
         }
@@ -54,12 +44,12 @@ namespace Errant.src.Scenes {
         private void OnLoadMapDoWorkHandler(object sender, DoWorkEventArgs e) {
             BackgroundWorker worker = sender as BackgroundWorker;
 
-            if (!loadExistingWorld) {
-                map.GenerateWorld(genSettings, worker);
+            if (!generationSettings.loadExistingWorld) {
+                map.GenerateWorld(generationSettings, worker);
                 map.SaveWorld();
             }
             else {
-                map.LoadWorld(genSettings.name);
+                map.LoadWorld(generationSettings.name);
             }
         }
 

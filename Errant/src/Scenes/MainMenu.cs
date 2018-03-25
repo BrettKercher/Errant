@@ -15,27 +15,36 @@ namespace Errant.src.Scenes {
         private Panel worldSelectPanel;
         private Panel newWorldPanel;
         private Panel multiplayerPanel;
+        private Panel joinGamePanel;
 
         private string newWorldName;
         private WorldSize newWorldSize;
 
         private string[] worldNames = {};
 
+        private NetworkSettings networkSettings;
+        private GenerationSettings generationSettings;
+
         public MainMenu(Application _application) : base(_application) {
         }
 
         public override void Initialize(ContentManager content) {
             base.Initialize(content);
+            
+            networkSettings = new NetworkSettings();
+            generationSettings = new GenerationSettings();
 
             mainPanel = BuildMainPanel();
             worldSelectPanel = BuildWorldSelectPanel();
             newWorldPanel = BuildNewWorldPanel();
             multiplayerPanel = BuildMultiplayerPanel();
+            joinGamePanel = BuildJoinPanel();
             
             mainPanel.Visible = true;
             worldSelectPanel.Visible = false;
             newWorldPanel.Visible = false;
             multiplayerPanel.Visible = false;
+            joinGamePanel.Visible = false;
         }
 
         public override void Dispose(ContentManager content) {
@@ -44,10 +53,14 @@ namespace Errant.src.Scenes {
             UserInterface.Active.RemoveEntity(mainPanel);
             UserInterface.Active.RemoveEntity(worldSelectPanel);
             UserInterface.Active.RemoveEntity(newWorldPanel);
+            UserInterface.Active.RemoveEntity(multiplayerPanel);
+            UserInterface.Active.RemoveEntity(joinGamePanel);
 
             mainPanel = null;
             worldSelectPanel = null;
             newWorldPanel = null;
+            multiplayerPanel = null;
+            joinGamePanel = null;
         }
 
         public override void Update(GameTime gameTime) {
@@ -176,11 +189,11 @@ namespace Errant.src.Scenes {
             multiplayerMainPanel.AddChild(new HorizontalLine());
 
             var hostButton = new Button("Host Game", ButtonSkin.Default);
-//            hostButton.OnMouseReleased = OnWorldSelected;
+            hostButton.OnMouseReleased = OnHostClicked;
             multiplayerMainPanel.AddChild(hostButton);
             
             var joinButton = new Button("Join Game", ButtonSkin.Default);
-//            joinButton.OnMouseReleased = OnWorldSelected;
+            joinButton.OnMouseReleased = OnJoinClicked;
             multiplayerMainPanel.AddChild(joinButton);
             
             var backButton = new Button("Back", ButtonSkin.Default, Anchor.BottomCenter, new Vector2(175, 50));
@@ -189,10 +202,40 @@ namespace Errant.src.Scenes {
             
             return parentPanel;
         }
+        
+        private Panel BuildJoinPanel() {
+            Panel parentPanel = new Panel(new Vector2(400, 425), PanelSkin.Default, Anchor.Center, new Vector2(0, 37.5f));
+            UserInterface.Active.AddEntity(parentPanel);
+            parentPanel.Opacity = 0;
+            parentPanel.Padding = new Vector2(12.5f, 0);
+            
+            Panel mainJoinPanel = new Panel(new Vector2(400, 350), PanelSkin.Default, Anchor.Center, new Vector2(0, -37.5f));
+            parentPanel.AddChild(mainJoinPanel);
+            
+            mainJoinPanel.AddChild(new Header("Enter IP:"));
+            mainJoinPanel.AddChild(new HorizontalLine());
+
+            var ipToJoin = new TextInput(false);
+            ipToJoin.OnValueChange = OnIpToJoinChanged;
+            ipToJoin.TextParagraph.AlignToCenter = true;
+            mainJoinPanel.AddChild(ipToJoin);
+            
+            var connectButton = new Button("Connect", ButtonSkin.Default);
+            connectButton.OnMouseReleased = OnConnectClicked;
+            mainJoinPanel.AddChild(connectButton);
+            
+            var backButton = new Button("Back", ButtonSkin.Default, Anchor.BottomCenter, new Vector2(175, 50));
+            backButton.OnMouseReleased = OnJoinBackClicked;
+            parentPanel.AddChild(backButton);
+            
+            return parentPanel;
+        }
 
         private void OnSingleplayerClicked(Entity entity) {
             mainPanel.Visible = false;
             worldSelectPanel.Visible = true;
+            
+            networkSettings.connect = false;
 
             RefreshWorldSelectList();
         }
@@ -200,6 +243,8 @@ namespace Errant.src.Scenes {
         private void OnMultiplayerClicked(Entity entity) {
             mainPanel.Visible = false;
             multiplayerPanel.Visible = true;
+
+            networkSettings.connect = true;
         }
         
         private void OnQuitClicked(Entity entity) {
@@ -210,6 +255,11 @@ namespace Errant.src.Scenes {
             mainPanel.Visible = true;
             multiplayerPanel.Visible = false;
         }
+        
+        private void OnJoinBackClicked(Entity entity) {
+            multiplayerPanel.Visible = true;
+            joinGamePanel.Visible = false;
+        }
 
         private void OnWorldSelected(Entity entity) {
             Button selectedWorld = (Button) entity;
@@ -217,10 +267,10 @@ namespace Errant.src.Scenes {
                 return;
             }
             
-            GenerationSettings generationSettings = new GenerationSettings();
             generationSettings.name = selectedWorld.ButtonParagraph.Text;
+            generationSettings.loadExistingWorld = true;
             
-            application.SwitchScene(new GenerationScreen(application, generationSettings, true));
+            NextScene();
         }
         
         private void OnWorldSelectBackClicked(Entity entity) {
@@ -269,12 +319,35 @@ namespace Errant.src.Scenes {
         
         private void OnNewWorldCreateClicked(Entity entity) {
             
-            GenerationSettings generationSettings = new GenerationSettings();
             generationSettings.name = newWorldName;
             generationSettings.seed = 0;
             generationSettings.size = newWorldSize;
+            generationSettings.loadExistingWorld = false;
 
-            application.SwitchScene(new GenerationScreen(application, generationSettings, false));
+            NextScene();
+        }
+        
+        private void OnHostClicked(Entity entity) {
+            multiplayerPanel.Visible = false;
+            worldSelectPanel.Visible = true;
+
+            networkSettings.isHost = true;
+
+            RefreshWorldSelectList();
+        }
+        
+        private void OnJoinClicked(Entity entity) {
+            joinGamePanel.Visible = true;
+            multiplayerPanel.Visible = false;
+        }
+
+        private void OnIpToJoinChanged(Entity entity) {
+            TextInput text = (TextInput)entity;
+            networkSettings.address = text?.Value;
+        }
+
+        private void OnConnectClicked(Entity entity) {
+            NextScene();
         }
 
         private void RefreshWorldSelectList() {
@@ -290,6 +363,16 @@ namespace Errant.src.Scenes {
             }
             
             worldSelectPanel = BuildWorldSelectPanel();
+        }
+
+        private void NextScene() {
+
+            if (networkSettings.connect) {
+                application.SwitchScene(new NetworkConnect(application, networkSettings));
+            }
+            else {
+                application.SwitchScene(new GenerationScreen(application, generationSettings));
+            }
         }
     }
 }

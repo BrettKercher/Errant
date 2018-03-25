@@ -1,4 +1,6 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System;
+using System.Runtime.CompilerServices;
+using System.Threading;
 using Errant.src;
 using Errant.src.Controllers;
 using Errant.src.Loaders;
@@ -19,15 +21,20 @@ namespace Errant {
 		private Scene currentScene;
         private GameMode gameMode;
         private PlayerController playerController;
+		private NetworkManager networkManager;
+		private Thread networkThread;
 
         public Application() {
 			graphics = new GraphicsDeviceManager(this);
             graphics.PreferredBackBufferWidth = 1600;
             graphics.PreferredBackBufferHeight = 900;
             Content.RootDirectory = "Content";
+	        
         }
 
 		protected override void Initialize() {
+
+			System.Diagnostics.Debug.WriteLine("Proccessor Count: " + Environment.ProcessorCount);
 
             playerController = new PlayerController(this);
 			
@@ -41,6 +48,14 @@ namespace Errant {
             Components.Add(Camera2D.Instance);
 
             base.Initialize();
+		}
+
+		public void InitializeNetworkManager(bool isHost, string address=null) {
+			networkManager = new NetworkManager(this);
+			ThreadStart threadStart = () => networkManager.Initialize(isHost, address);
+			networkThread = new Thread(threadStart);
+			networkThread.Name = "Network Thread";
+			networkThread.Start();
 		}
 
 		protected override void LoadContent() {
@@ -58,7 +73,8 @@ namespace Errant {
 		protected override void Update(GameTime gameTime) {
 			currentScene.Update(gameTime);
 			UserInterface.Active.Update(gameTime);
-            base.Update(gameTime);
+
+			base.Update(gameTime);
 		}
 
 		protected override void Draw(GameTime gameTime) {
