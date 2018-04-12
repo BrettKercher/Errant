@@ -34,13 +34,11 @@ namespace Errant.src.GameObjects {
 
             if (itemDef.Tool) {
                 // tool, harvest object at tile location
-                Overworld overworld = (Overworld)application.GetCurrentScene();
-                overworld.GetWorldManager().RemoveObjectAt(targetTileX, targetTileY);
+                application.GetCurrentWorldManager().RemoveObjectAt(targetTileX, targetTileY);
             }
 
             if (itemDef.PlacedObject > 0) {
-                Overworld overworld = (Overworld)application.GetCurrentScene();
-                overworld.GetWorldManager().PlaceObjectAt(itemDef.PlacedObject, targetTileX, targetTileY);
+                application.GetCurrentWorldManager().PlaceObjectAt(itemDef.PlacedObject, targetTileX, targetTileY);
             }
 
             if (itemDef.Consumable) {

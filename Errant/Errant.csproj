@@ -64,8 +64,12 @@
     <Compile Include="src\Ids\ObjectIds.cs" />
     <Compile Include="src\Loaders\ItemManager.cs" />
     <Compile Include="src\Loaders\ObjectManager.cs" />
-    <Compile Include="src\NetworkManager.cs" />
-    <Compile Include="src\Scenes\NetworkConnect.cs" />
+    <Compile Include="src\Networking\Client.cs" />
+    <Compile Include="src\Networking\NetworkManager.cs" />
+    <Compile Include="src\Networking\Peer.cs" />
+    <Compile Include="src\Networking\Server.cs" />
+    <Compile Include="src\Networking\StreamingService.cs" />
+    <Compile Include="src\Scenes\LoadingScreen.cs" />
     <Compile Include="src\Scenes\Scene.cs" />
     <Compile Include="src\ICoreComponent.cs" />
     <Compile Include="src\Scenes\GenerationScreen.cs" />

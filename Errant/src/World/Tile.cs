@@ -30,8 +30,11 @@ namespace Errant.src.World {
 
         public ushort GroundTileId { get; set; }
         public ushort ObjectTileId { get; set; }
-        
-        public PersistentTile() {  }
+
+        public PersistentTile() {
+            GroundTileId = 0;
+            ObjectTileId = 0;
+        }
 
         public PersistentTile(PointData pointData) {
 

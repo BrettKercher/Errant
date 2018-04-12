@@ -19,13 +19,15 @@ namespace Errant.src.Scenes {
 
         private string newWorldName;
         private WorldSize newWorldSize;
+        private bool startFromWorldSelect;
 
         private string[] worldNames = {};
 
         private NetworkSettings networkSettings;
         private GenerationSettings generationSettings;
 
-        public MainMenu(Application _application) : base(_application) {
+        public MainMenu(Application _application, bool _startFromWorldSelect = false) : base(_application) {
+            startFromWorldSelect = _startFromWorldSelect;
         }
 
         public override void Initialize(ContentManager content) {
@@ -39,12 +41,23 @@ namespace Errant.src.Scenes {
             newWorldPanel = BuildNewWorldPanel();
             multiplayerPanel = BuildMultiplayerPanel();
             joinGamePanel = BuildJoinPanel();
-            
-            mainPanel.Visible = true;
-            worldSelectPanel.Visible = false;
-            newWorldPanel.Visible = false;
-            multiplayerPanel.Visible = false;
-            joinGamePanel.Visible = false;
+
+            if (!startFromWorldSelect) {
+                mainPanel.Visible = true;
+                worldSelectPanel.Visible = false;
+                newWorldPanel.Visible = false;
+                multiplayerPanel.Visible = false;
+                joinGamePanel.Visible = false;
+            }
+            else {
+                mainPanel.Visible = false;
+                worldSelectPanel.Visible = true;
+                newWorldPanel.Visible = false;
+                multiplayerPanel.Visible = false;
+                joinGamePanel.Visible = false;
+                
+                RefreshWorldSelectList();
+            }
         }
 
         public override void Dispose(ContentManager content) {
@@ -235,7 +248,7 @@ namespace Errant.src.Scenes {
             mainPanel.Visible = false;
             worldSelectPanel.Visible = true;
             
-            networkSettings.connect = false;
+            Config.Multiplayer = false;
 
             RefreshWorldSelectList();
         }
@@ -244,7 +257,7 @@ namespace Errant.src.Scenes {
             mainPanel.Visible = false;
             multiplayerPanel.Visible = true;
 
-            networkSettings.connect = true;
+            Config.Multiplayer = true;
         }
         
         private void OnQuitClicked(Entity entity) {
@@ -266,11 +279,7 @@ namespace Errant.src.Scenes {
             if (selectedWorld == null) {
                 return;
             }
-            
-            generationSettings.name = selectedWorld.ButtonParagraph.Text;
-            generationSettings.loadExistingWorld = true;
-            
-            NextScene();
+            NextScene(selectedWorld.ButtonParagraph.Text);
         }
         
         private void OnWorldSelectBackClicked(Entity entity) {
@@ -322,9 +331,8 @@ namespace Errant.src.Scenes {
             generationSettings.name = newWorldName;
             generationSettings.seed = 0;
             generationSettings.size = newWorldSize;
-            generationSettings.loadExistingWorld = false;
-
-            NextScene();
+            
+            application.SwitchScene(new GenerationScreen(application, generationSettings));
         }
         
         private void OnHostClicked(Entity entity) {
@@ -347,16 +355,14 @@ namespace Errant.src.Scenes {
         }
 
         private void OnConnectClicked(Entity entity) {
-            NextScene();
+            NextScene("");
         }
 
         private void RefreshWorldSelectList() {
-            
             //refresh world names list
-            worldNames = Directory.GetFiles(Config.WorldSaveDirectory, "*.world", SearchOption.TopDirectoryOnly)
+            worldNames = Directory.GetDirectories(Config.WorldSaveDirectory)
                 .Select(Path.GetFileNameWithoutExtension).ToArray();
             
-
             if (worldSelectPanel != null) {
                 UserInterface.Active.RemoveEntity(worldSelectPanel);
                 worldSelectPanel = null;
@@ -365,14 +371,13 @@ namespace Errant.src.Scenes {
             worldSelectPanel = BuildWorldSelectPanel();
         }
 
-        private void NextScene() {
-
-            if (networkSettings.connect) {
-                application.SwitchScene(new NetworkConnect(application, networkSettings));
+        private void NextScene(string worldName) {
+            
+            if (Config.Multiplayer) {
+                application.InitializeNetworkManager(networkSettings.isHost, networkSettings.address);
             }
-            else {
-                application.SwitchScene(new GenerationScreen(application, generationSettings));
-            }
+            
+            application.SwitchScene(new LoadingScreen(application, worldName, networkSettings.isHost || !Config.Multiplayer));
         }
     }
 }

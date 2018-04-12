@@ -2,6 +2,7 @@
 using Errant.src.World;
 using Microsoft.Xna.Framework;
 using System.Collections.Generic;
+using System.IO;
 
 //This file should eventually be read from json/xml
 namespace Errant.src {
@@ -9,7 +10,7 @@ namespace Errant.src {
 
 		//TODO: Read in from json/xml
 
-		public static readonly Dictionary<WorldSize, Vector2> sizeMap = new Dictionary<WorldSize, Vector2>() {
+		public static readonly Dictionary<WorldSize, Vector2> sizeMap = new Dictionary<WorldSize, Vector2> {
 			{   WorldSize.TINY, new Vector2(12, 8)      },
 			{   WorldSize.SMALL, new Vector2(72, 48)    },
 			{   WorldSize.MEDIUM, new Vector2(96, 64)   },
@@ -19,14 +20,18 @@ namespace Errant.src {
 		public static readonly int CHUNK_SIZE = 32;      // Size in tiles of a chunk
 		public static readonly int TILE_SIZE = 32;       // Size in pixels of a tile
 
-        public static readonly int GROUND_LAYER = 1;
-        public static readonly int GROUND_TRANSITION_LAYER = 2;
-        public static readonly int PLAYER_LAYER = 3;
+		public static bool Multiplayer = false;
 
 		public static string WorldSaveDirectory {
 			get {
 				var appData = Environment.GetEnvironmentVariable("APPDATA");
-				return appData + "\\Errant\\Worlds\\";
+				var dir = Path.Combine(appData, "Errant", "Saves");
+				
+				if (!Directory.Exists(dir)) {
+					Directory.CreateDirectory(dir);
+				}
+
+				return dir;
 			}
 		}
 	}

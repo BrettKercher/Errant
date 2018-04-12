@@ -8,15 +8,12 @@ using System.ComponentModel;
 namespace Errant.src.Scenes {
     public class GenerationScreen : Scene {
         
-        private WorldManager map;
         private int progress;
         private GenerationSettings generationSettings;
 
         public GenerationScreen(Application _application, GenerationSettings genSettings) : base(_application) {
             application = _application;
             generationSettings = genSettings;
-            
-            map = new WorldManager();
         }
 
         public override void Initialize(ContentManager content) {
@@ -43,14 +40,10 @@ namespace Errant.src.Scenes {
 
         private void OnLoadMapDoWorkHandler(object sender, DoWorkEventArgs e) {
             BackgroundWorker worker = sender as BackgroundWorker;
-
-            if (!generationSettings.loadExistingWorld) {
-                map.GenerateWorld(generationSettings, worker);
-                map.SaveWorld();
-            }
-            else {
-                map.LoadWorld(generationSettings.name);
-            }
+            
+            WorldManager map = new WorldManager();
+            map.GenerateWorld(generationSettings, worker);
+            map.SaveWorld();
         }
 
         private void OnLoadMapProgressChangedHandler(object sender, ProgressChangedEventArgs e) {
@@ -58,8 +51,7 @@ namespace Errant.src.Scenes {
         }
 
         private void OnLoadMapCompleteHandler(object sender, RunWorkerCompletedEventArgs e) {
-            application.SwitchScene(new Overworld(application, map));
-//            application.SwitchScene(new WorldViewer(application, map));
+            application.SwitchScene(new MainMenu(application, true));
         }
     }
 }

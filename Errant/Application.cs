@@ -5,6 +5,7 @@ using Errant.src;
 using Errant.src.Controllers;
 using Errant.src.Loaders;
 using Errant.src.Scenes;
+using Errant.src.World;
 using GeonBit.UI;
 using GeonBit.UI.Entities;
 using Microsoft.Xna.Framework;
@@ -29,12 +30,9 @@ namespace Errant {
             graphics.PreferredBackBufferWidth = 1600;
             graphics.PreferredBackBufferHeight = 900;
             Content.RootDirectory = "Content";
-	        
         }
 
 		protected override void Initialize() {
-
-			System.Diagnostics.Debug.WriteLine("Proccessor Count: " + Environment.ProcessorCount);
 
             playerController = new PlayerController(this);
 			
@@ -51,8 +49,8 @@ namespace Errant {
 		}
 
 		public void InitializeNetworkManager(bool isHost, string address=null) {
-			networkManager = new NetworkManager(this);
-			ThreadStart threadStart = () => networkManager.Initialize(isHost, address);
+			networkManager = new NetworkManager(this, isHost);
+			ThreadStart threadStart = () => networkManager.Initialize(address);
 			networkThread = new Thread(threadStart);
 			networkThread.Name = "Network Thread";
 			networkThread.Start();
@@ -101,6 +99,18 @@ namespace Errant {
             base.Draw(gameTime);
 		}
 
+		public void CreateSceneSnapshot() {
+			// currentScene.CreateSnapshot();
+		}
+
+		public void ApplySceneSnapshot() {
+			// currentScene.ApplySnapshot();
+		}
+
+		public WorldManager GetCurrentWorldManager() {
+			return currentScene.GetWorldManager();
+		}
+
 		public void SwitchScene(Scene newScene) {
 			if (newScene == null) {
 				return;
@@ -124,6 +134,13 @@ namespace Errant {
 
 		public void Quit() {
 			Exit();
+		}
+
+		protected override void OnExiting(Object sender, EventArgs args) {
+			base.OnExiting(sender, args);
+			
+			networkManager?.Shutdown();
+			networkThread?.Abort();
 		}
 	}
 }

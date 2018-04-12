@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
+using Errant.src.World;
 
 namespace Errant.src.Scenes {
     public class Scene : ICoreComponent {
@@ -42,6 +43,10 @@ namespace Errant.src.Scenes {
         public void AddEntity(Entity entity) {
             entity.RegisterComponents();
             entities.Add(entity);
+        }
+
+        public virtual WorldManager GetWorldManager() {
+            return null;
         }
     }
 }

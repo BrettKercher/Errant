@@ -56,7 +56,7 @@ namespace Errant.src.Scenes {
 
                 // worldManager.PrintTileData(tileX, tileY);
             }
-
+            
             prevMouseState = mouseState;
         }
 
@@ -66,7 +66,7 @@ namespace Errant.src.Scenes {
             base.Draw(gameTime, spriteBatch);
         }
 
-        public WorldManager GetWorldManager() {
+        public override WorldManager GetWorldManager() {
             return worldManager;
         }
     }

@@ -12,6 +12,5 @@ namespace Errant.src.World {
         public string name;
         public WorldSize size;
         public int seed;
-        public bool loadExistingWorld;
     }
 }

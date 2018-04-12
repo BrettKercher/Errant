@@ -27,11 +27,13 @@ namespace Errant.src.World {
         }
 
         public void Serialize(WorldData world) {
-            if (!Directory.Exists(Config.WorldSaveDirectory)) {
-                Directory.CreateDirectory(Config.WorldSaveDirectory);
+            
+            string dir = Path.Combine(Config.WorldSaveDirectory, world.GetName());
+            if (!Directory.Exists(dir)) {
+                Directory.CreateDirectory(dir);
             }
 
-            fileStream = new FileStream(Config.WorldSaveDirectory + world.name + fileExtension, FileMode.Create, FileAccess.Write);
+            fileStream = new FileStream(Path.Combine(dir, world.GetName() + fileExtension), FileMode.Create, FileAccess.Write);
             writer = new BinaryWriter(fileStream);
             int[] sectionPointers = new int[numSections];
 
@@ -45,7 +47,7 @@ namespace Errant.src.World {
         }
 
         private int BlockOutSectionPointer(WorldData world) {
-            writer.Write(world.versionNumber);
+            writer.Write(world.Version());
             writer.Write((byte) numSections);
             for (int i = 0; i < numSections; i++) {
                 writer.Write(0);
@@ -55,7 +57,7 @@ namespace Errant.src.World {
         }
 
         private int SerializeHeader(WorldData world) {
-            writer.Write(world.name);
+            writer.Write(world.GetName());
             writer.Write(world.GetWidth());
             writer.Write(world.GetHeight());
             
@@ -95,7 +97,7 @@ namespace Errant.src.World {
         private void SerializeSectionPointers(WorldData world, int[] pointers) {
             writer.BaseStream.Position = 0L;
 
-            writer.Write(world.versionNumber);
+            writer.Write(world.Version());
             writer.Write((byte) pointers.Length);
 
             for (int i = 0; i < pointers.Length; i++) {
@@ -106,12 +108,14 @@ namespace Errant.src.World {
         public WorldData Deserialize(string worldName) {
             WorldData worldData = new WorldData();
 
-            if (!File.Exists(Config.WorldSaveDirectory + worldName + fileExtension)) {
+            string worldFilePath = Path.Combine(Config.WorldSaveDirectory, worldName, worldName + fileExtension);
+            
+            if (!File.Exists(worldFilePath)) {
                 System.Diagnostics.Debug.WriteLine("Attempted to load a World that doesn't Exist!");
                 return null;
             }
 
-            using (fileStream = new FileStream(Config.WorldSaveDirectory + worldName + fileExtension, FileMode.Open)) {
+            using (fileStream = new FileStream(worldFilePath, FileMode.Open)) {
                 using (reader = new BinaryReader(fileStream)) {
                     try {
                         int[] array;
@@ -145,7 +149,7 @@ namespace Errant.src.World {
         }
 
         private void DeserializeSectionPointers(WorldData world, out int[] sectionPointers) {
-            world.versionNumber = reader.ReadString();
+            world.SetVersion(reader.ReadString());
             int sections = reader.ReadByte();
 
             sectionPointers = new int[sections];
@@ -156,7 +160,7 @@ namespace Errant.src.World {
         }
 
         private void DeserializeWorldHeader(WorldData worldData) {
-            worldData.name = reader.ReadString();
+            worldData.SetName(reader.ReadString());
             int width = reader.ReadInt32();
             int height = reader.ReadInt32();
             worldData.SetDimensions(width, height);

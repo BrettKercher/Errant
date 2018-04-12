@@ -9,7 +9,7 @@ using System.ComponentModel;
 
 namespace Errant.src.World {
 
-	class WorldManager {
+	public class WorldManager {
 
 		public enum DRAW_MODE {
 			Shape = 0,
@@ -39,6 +39,10 @@ namespace Errant.src.World {
             groundTileAtlas = new TextureAtlas(tileMap, TILE_COLUMNS, TILE_ROWS, Config.TILE_SIZE, Config.TILE_SIZE);
         }
 
+		public WorldHeader GetWorldHeader() {
+			return worldData.GetWorldHeader();
+		}
+
 		public int GetWidthInChunks() {
 			return worldData.GetWidth() / Config.CHUNK_SIZE;
 		}
@@ -50,7 +54,7 @@ namespace Errant.src.World {
 		public void GenerateWorld(GenerationSettings settings, BackgroundWorker worker = null) {
 			GenerationData genData = generator.Generate(settings, worker);
 			worldData = new WorldData(genData);
-			worldData.name = settings.name;
+			worldData.SetName(settings.name);
 		}
 
 		public void SaveWorld() {
@@ -59,6 +63,11 @@ namespace Errant.src.World {
 
 		public void LoadWorld(string worldName) {
 			worldData = serializer.Deserialize(worldName);
+		}
+
+		public void GenerateEmptyWorld(WorldHeader header) {
+			// used for client in networked games. Generates an empty world based on the given WorldHeader
+			worldData = new WorldData(header);
 		}
 
 		public void DrawWorld(GameTime gameTime, SpriteBatch spriteBatch, int origin, int viewDistance) {
