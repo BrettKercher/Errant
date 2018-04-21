@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
 using System.Threading;
+using Errant.Networking;
 using Errant.src;
 using Errant.src.Controllers;
 using Errant.src.Loaders;
@@ -23,6 +24,7 @@ namespace Errant {
         private GameMode gameMode;
         private PlayerController playerController;
 		private NetworkManager networkManager;
+		private SnapshotManager snapshotManager;
 		private Thread networkThread;
 
         public Application() {
@@ -35,6 +37,7 @@ namespace Errant {
 		protected override void Initialize() {
 
             playerController = new PlayerController(this);
+			snapshotManager = new SnapshotManager();
 			
 			UserInterface.Initialize(Content, BuiltinThemes.hd);
 			UserInterface.Active.UseRenderTarget = true;
@@ -99,12 +102,10 @@ namespace Errant {
             base.Draw(gameTime);
 		}
 
-		public void CreateSceneSnapshot() {
-			// currentScene.CreateSnapshot();
-		}
-
-		public void ApplySceneSnapshot() {
-			// currentScene.ApplySnapshot();
+		public Snapshot TakeSnapshot(ulong snapshotCount) {
+			
+			// snapshotManager
+			return null;
 		}
 
 		public WorldManager GetCurrentWorldManager() {

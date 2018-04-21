@@ -10,6 +10,7 @@ namespace Errant.src.Networking {
         
         private Timer updateLoop;
         private const int SnapshotSendRate = 50;
+        private ulong snapshotCount = 0;
 
         private Dictionary<NetConnection, ulong> baselineSnapshotMap;
 
@@ -33,7 +34,15 @@ namespace Errant.src.Networking {
         private void SendWorldSnapshot(object obj) {
             // generate snapshot of everything that has changed from the previous frame
             //send relevant sections of the snapshot to each connection
+            Snapshot snap = application.TakeSnapshot(snapshotCount);
+            snapshotCount++;
+
+            NetOutgoingMessage msg = CreateMessageFromSnapshot(snap);
+            
             foreach (NetConnection conn in peer.Connections) {
+
+                peer.SendMessage(msg, conn, NetDeliveryMethod.ReliableOrdered);
+                
                 ulong lastSnapshot;
                 if (baselineSnapshotMap.TryGetValue(conn, out lastSnapshot)) {
                     if (lastSnapshot == 0) {
@@ -44,6 +53,10 @@ namespace Errant.src.Networking {
                     }
                 }
             }
+        }
+
+        private NetOutgoingMessage CreateMessageFromSnapshot(Snapshot snapshot) {
+            return null;
         }
         
         public override void ReceiveMessages() {

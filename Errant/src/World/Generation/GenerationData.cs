@@ -37,6 +37,5 @@ namespace Errant.src.World.Generation {
         public float temperature;
         public float moisture;
         public float elevation;
-
     }
 }

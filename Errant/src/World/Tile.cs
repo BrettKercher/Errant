@@ -67,7 +67,7 @@ namespace Errant.src.World {
         private Dictionary<ushort, byte> edgeTransitionData;
         private Dictionary<ushort, byte> cornerTransitionData;
 
-        List<KeyValuePair<ushort, byte>> transitionData;
+        private List<KeyValuePair<ushort, byte>> transitionData;
 
         public ActiveTile(PersistentTile _persistentTile) {
             persistentTile = _persistentTile;

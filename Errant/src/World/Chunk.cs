@@ -8,7 +8,8 @@ namespace Errant.src.World
 {
 	public class Chunk
 	{
-		ActiveTile[] tiles;
+		private PersistentTile[] tileData;
+		private ActiveTile[] tiles;
 
 		public Chunk()
 		{
