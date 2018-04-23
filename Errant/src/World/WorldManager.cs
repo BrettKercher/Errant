@@ -93,7 +93,7 @@ namespace Errant.src.World {
 				return;
 			}
 
-			ActiveTile[] tiles = chunk.GetTiles();
+			ActiveTile[] tiles = chunk.GetActiveTiles();
 
 			int x, y;
 			int xPos, yPos;

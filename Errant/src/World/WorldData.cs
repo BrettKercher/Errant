@@ -20,7 +20,8 @@ namespace Errant.src.World
 	public class WorldData {
 		
 		private WorldHeader header;
-        private PersistentTile[] tileData;
+//        private PersistentTile[] tileData;
+		private Chunk[] chunks;
         private Dictionary<int, Chunk> loadedChunks;
 
         private readonly Dictionary<byte, Vector2> edgeOffsets = new Dictionary<byte, Vector2> {
@@ -36,29 +37,33 @@ namespace Errant.src.World
                 { 4, new Vector2(-1, -1)},
                 { 8, new Vector2(1, -1) },
             };
+		
+		public WorldData(GenerationData genData) {
+			int chunkWidth = (genData.width / Config.CHUNK_SIZE);
+			int chunkHeight = (genData.height / Config.CHUNK_SIZE);
+			chunks = new Chunk[chunkWidth * chunkHeight];
+			loadedChunks = new Dictionary<int, Chunk>();
+			
+			header.width = genData.width;
+			header.height = genData.height;
+			header.versionNumber = "0.0.1";
 
-        public WorldData(GenerationData genData) {
-            int i;
-            int numTiles = genData.pointData.Length;
-            tileData = new PersistentTile[numTiles];
-            loadedChunks = new Dictionary<int, Chunk>();
+			for (int i = 0; i < (chunkWidth * chunkHeight); i++) {
+				chunks[i] = new Chunk(genData, i % chunkWidth, i / chunkWidth, header.width);
+			}
+		}
 
-            header.width = genData.width;
-	        header.height = genData.height;
-
-            for (i = 0; i < numTiles; i++) {
-                tileData[i] = new PersistentTile(genData.pointData[i]);
-            }
-        }
-
+		// Generates an empty world based on the given header
 		public WorldData(WorldHeader _header) {
 			header = _header;
+
+			int chunkWidth = (header.width / Config.CHUNK_SIZE);
+			int chunkHeight = (header.height / Config.CHUNK_SIZE);
+			chunks = new Chunk[chunkWidth * chunkHeight];
 			loadedChunks = new Dictionary<int, Chunk>();
-			int numTiles = header.width * header.height;
-			tileData = new PersistentTile[numTiles];
 			
-			for (int i = 0; i < numTiles; i++) {
-				tileData[i] = new PersistentTile();
+			for (int i = 0; i < (chunkWidth * chunkHeight); i++) {
+				chunks[i] = new Chunk();
 			}
 		}
 	    
@@ -70,9 +75,17 @@ namespace Errant.src.World
 			return header;
 		}
 
-	    public PersistentTile[] GetTileData() {
-	        return tileData;
-	    }
+//	    public PersistentTile[] GetTileData() {
+//	        return tileData;
+//	    }
+
+		public Chunk[] GetChunks() {
+			return chunks;
+		}
+
+		public void SetChunks(Chunk[] value) {
+			chunks = value;
+		}
 
 		public int GetWidth() {
 			return header.width;
@@ -101,18 +114,7 @@ namespace Errant.src.World
 	    public void SetDimensions(int w, int h) {
 		    header.width = w;
 		    header.height = h;
-	        int i;
-	        int numTiles = w * h;
-	        tileData = new PersistentTile[numTiles];
-
-	        for (i = 0; i < numTiles; i++) {
-	            tileData[i] = new PersistentTile();
-	        }
 	    }
-
-        public PersistentTile GetPersistentTile(int tileIndex) {
-            return tileData[tileIndex];
-        }
 
 	    public ActiveTile GetActiveTile(int tileX, int tileY) {
 	        int localTileX = tileX % Config.CHUNK_SIZE;
@@ -128,7 +130,7 @@ namespace Errant.src.World
 	            return null;
 	        }
 
-	        return chunk.GetTiles()[(localTileY * Config.CHUNK_SIZE) + localTileX];
+	        return chunk.GetActiveTiles()[(localTileY * Config.CHUNK_SIZE) + localTileX];
 	    }
 
         public ActiveTile GetActiveTile(int tileIndex) {
@@ -146,80 +148,9 @@ namespace Errant.src.World
                 return chunk;
             }
 
-            chunk = new Chunk();
-
-            int i, j;
-            int chunkX, chunkY;
-            int startTileX, startTileY;
-            int pointIndex, tileIndex;
-            ActiveTile[] tiles;
-	        int width = header.width;
-	        int height = header.height;
-            
-            tiles = chunk.GetTiles();
-            chunkX = chunkIndex % (width / Config.CHUNK_SIZE);
-            chunkY = chunkIndex / (width / Config.CHUNK_SIZE);
-            startTileX = chunkX * Config.CHUNK_SIZE;
-            startTileY = chunkY * Config.CHUNK_SIZE;
-            tileIndex = 0;
-
-            for (j = startTileY; j < startTileY + Config.CHUNK_SIZE; j++) {
-                for (i = startTileX; i < startTileX + Config.CHUNK_SIZE; i++) {
-                    pointIndex = (j * width) + i;
-                    tiles[tileIndex] = new ActiveTile(tileData[pointIndex]);
-                    tileIndex++;
-                }
-            }
-
-            // Calculate Transitions
-            int nG, nGX, nGY;
-            int nL, nLX, nLY;
-            ushort nGId, cGId;
-            int cGPriority, nGPriority;
-            for (j = startTileY - 1; j <= startTileY + Config.CHUNK_SIZE; j++) {
-                for (i = startTileX - 1; i <= startTileX + Config.CHUNK_SIZE; i++) {
-                    if (j < 0 || j >= height || i < 0 || i >= width) { continue; }
-                    pointIndex = (j * width) + i;
-                    cGId = tileData[pointIndex].GroundTileId;
-                    cGPriority = Array.IndexOf(GroundIds.priorities, cGId);
-
-                    foreach (KeyValuePair<byte, Vector2> entry in edgeOffsets) {
-                        nGX = i + (int)entry.Value.X;
-                        nGY = j + (int)entry.Value.Y;
-                        if (nGY >= 0 && nGX >= 0 && nGY < height && nGX < width) {
-                            nG = (nGY * width) + nGX;
-                            nGId = tileData[nG].GroundTileId;
-                            nGPriority = Array.IndexOf(GroundIds.priorities, nGId);
-                            nLX = nGX - startTileX;
-                            nLY = nGY - startTileY;
-                            if (nLX >= 0 && nLX < Config.CHUNK_SIZE && nLY >= 0 && nLY < Config.CHUNK_SIZE && nGPriority < cGPriority) {
-                                nL = (nLY * Config.CHUNK_SIZE) + nLX;
-                                tiles[nL].IncrementEdgeTransition(cGId, entry.Key);
-                            }
-                        }
-                    }
-
-                    foreach (KeyValuePair<byte, Vector2> entry in cornerOffsets) {
-                        nGX = i + (int)entry.Value.X;
-                        nGY = j + (int)entry.Value.Y;
-                        if (nGY >= 0 && nGX >= 0 && nGY < height && nGX < width) {
-                            nG = (nGY * width) + nGX;
-                            nGId = tileData[nG].GroundTileId;
-                            nGPriority = Array.IndexOf(GroundIds.priorities, nGId);
-                            nLX = nGX - startTileX;
-                            nLY = nGY - startTileY;
-                            if (nLX >= 0 && nLX < Config.CHUNK_SIZE && nLY >= 0 && nLY < Config.CHUNK_SIZE && nGPriority < cGPriority) {
-                                nL = (nLY * Config.CHUNK_SIZE) + nLX;
-                                tiles[nL].IncrementCornerTransition(cGId, entry.Key);
-                            }
-                        }
-                    }
-                }
-            }
-
-            foreach (ActiveTile tile in tiles) {
-                tile.PrepTransitionData();
-            }
+	        chunk = chunks[chunkIndex];
+	        
+	        chunk.Load();
 
             loadedChunks.Add(chunkIndex, chunk);
             return chunk;

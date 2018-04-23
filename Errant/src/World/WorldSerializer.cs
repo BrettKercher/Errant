@@ -23,9 +23,6 @@ namespace Errant.src.World {
             ObjectIdIsShort = 1 << 6
         }
 
-        public WorldSerializer() {
-        }
-
         public void Serialize(WorldData world) {
             
             string dir = Path.Combine(Config.WorldSaveDirectory, world.GetName());
@@ -39,7 +36,7 @@ namespace Errant.src.World {
 
             sectionPointers[0] = BlockOutSectionPointer(world);
             sectionPointers[1] = SerializeHeader(world);
-            sectionPointers[2] = SerializeTiles(world);
+            sectionPointers[2] = SerializeChunks(world);
             SerializeSectionPointers(world, sectionPointers);
 
             writer.Close();
@@ -64,33 +61,36 @@ namespace Errant.src.World {
             return (int) writer.BaseStream.Position;
         }
 
-        private int SerializeTiles(WorldData world) {
+        private int SerializeChunks(WorldData world) {
             byte b; //represents 8 booleans compacted into a single byte
             byte[] tileData; //byte array to hold tile data
             PersistentTile tile; //Cached version of the current tile
             int byteIndex; //Current index into the tileData array
+            
+            var chunks = world.GetChunks();
 
-            var tiles = world.GetTileData();
+            writer.Write(chunks.Length);
 
-            for (int i = 0; i < tiles.Length; i++) {
-                b = 0;
-                byteIndex = 1;
-                tile = tiles[i];
-                tileData = new byte[bytesPerTile];
-
-                tileData[byteIndex] = (byte) tile.GroundTileId;
-                byteIndex++;
-
-                if (tile.ObjectTileId > 0) {
-                    b |= (byte) Masks.WallPresent;
-                    tileData[byteIndex] = (byte) tile.ObjectTileId;
+            for (int i = 0; i < chunks.Length; i++) {
+                var tiles = chunks[i].GetTiles();
+                for (int j = 0; j < tiles.Length; j++) {
+                    b = 0;
+                    byteIndex = 1;
+                    tile = tiles[j];
+                    tileData = new byte[bytesPerTile];
+                    tileData[byteIndex] = (byte) tile.GroundTileId;
                     byteIndex++;
+                    if (tile.ObjectTileId > 0) {
+                        b |= (byte) Masks.WallPresent;
+                        tileData[byteIndex] = (byte) tile.ObjectTileId;
+                        byteIndex++;
+                    }
+                    tileData[0] = b;
+                    writer.Write(tileData, 0, byteIndex);
                 }
-
-                tileData[0] = b;
-                writer.Write(tileData, 0, byteIndex);
             }
-
+            
+            
             return (int) writer.BaseStream.Position;
         }
 
@@ -130,7 +130,7 @@ namespace Errant.src.World {
                             throw new Exception("Invalid world file format - after reading world header!");
                         }
 
-                        DeserializeWorldTiles(worldData);
+                        DeserializeWorldChunks(worldData);
                         if (reader.BaseStream.Position != array[2]) {
                             throw new Exception("Invalid world file format - after reading world tiles!");
                         }
@@ -166,21 +166,30 @@ namespace Errant.src.World {
             worldData.SetDimensions(width, height);
         }
 
-        private void DeserializeWorldTiles(WorldData worldData) {
+        private void DeserializeWorldChunks(WorldData worldData) {
             byte b; //represents 8 booleans compacted into a single byte
-            PersistentTile tile; //Cached version of the current tile
 
-            for (int i = 0; i < worldData.GetWidth() * worldData.GetHeight(); i++) {
-                tile = worldData.GetPersistentTile(i);
+            int numChunks = reader.ReadInt32();
+            
+            Chunk[] chunks = new Chunk[numChunks];
+            PersistentTile[] tiles;
 
-                b = reader.ReadByte();
+            for (int i = 0; i < numChunks; i++) {
+                tiles = new PersistentTile[Config.CHUNK_SIZE * Config.CHUNK_SIZE];
+                for (int j = 0; j < tiles.Length; j++) {
+                    tiles[j] = new PersistentTile();
 
-                tile.GroundTileId = reader.ReadByte();
+                    b = reader.ReadByte();
+                    tiles[j].GroundTileId = reader.ReadByte();
 
-                if ((b & (byte) Masks.WallPresent) == (byte) Masks.WallPresent) {
-                    tile.ObjectTileId = reader.ReadByte();
+                    if ((b & (byte) Masks.WallPresent) == (byte) Masks.WallPresent) {
+                        tiles[j].ObjectTileId = reader.ReadByte();
+                    }
                 }
+                chunks[i] = new Chunk(tiles);
             }
+            
+            worldData.SetChunks(chunks);
         }
     }
 }
