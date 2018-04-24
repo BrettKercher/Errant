@@ -82,11 +82,15 @@ namespace Errant.src.Networking {
                     // string = version number
                     // int = width
                     // int = height
+                    // int spawn X
+                    // int spawn Y
 
                     WorldHeader header = new WorldHeader();
                     header.name = msg.ReadString();
                     header.width = msg.ReadInt32();
                     header.height = msg.ReadInt32();
+                    header.spawnArea.X = msg.ReadInt32();
+                    header.spawnArea.Y = msg.ReadInt32();
 
                     WorldDetailsReceived(header);
 

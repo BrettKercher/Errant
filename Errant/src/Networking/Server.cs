@@ -165,10 +165,12 @@ namespace Errant.src.Networking {
             WorldManager worldManager = application.GetCurrentWorldManager();
             if (worldManager != null) {
                 WorldHeader header = worldManager.GetWorldHeader();
-                sendMsg.Write((byte)0);
+                sendMsg.Write((byte)0);    //message type
                 sendMsg.Write(header.name);
                 sendMsg.Write(header.width);
                 sendMsg.Write(header.height);
+                sendMsg.Write(header.spawnArea.X);
+                sendMsg.Write(header.spawnArea.Y);
 
                 peer.SendMessage(sendMsg, msg.SenderConnection, NetDeliveryMethod.ReliableOrdered);
             }
