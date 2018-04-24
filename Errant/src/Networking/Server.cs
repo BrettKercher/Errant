@@ -167,7 +167,6 @@ namespace Errant.src.Networking {
                 WorldHeader header = worldManager.GetWorldHeader();
                 sendMsg.Write((byte)0);
                 sendMsg.Write(header.name);
-                sendMsg.Write(header.versionNumber);
                 sendMsg.Write(header.width);
                 sendMsg.Write(header.height);
 

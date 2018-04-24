@@ -19,6 +19,7 @@ namespace Errant.src {
 
 		public static readonly int CHUNK_SIZE = 32;      // Size in tiles of a chunk
 		public static readonly int TILE_SIZE = 32;       // Size in pixels of a tile
+		public static readonly int SPAWN_AREA_SIZE = 2;
 
 		public static bool Multiplayer = false;
 

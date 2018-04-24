@@ -12,31 +12,17 @@ namespace Errant.src.World
 
 	public struct WorldHeader {
 		public string name;
-		public string versionNumber;
 		public int width;		// Width of the world in tiles
 		public int height;     // Height of the world in tiles
+		public Rectangle spawnArea;
 	}
 	
 	public class WorldData {
-		
+
+		private string version = "0.0.1";
 		private WorldHeader header;
-//        private PersistentTile[] tileData;
 		private Chunk[] chunks;
         private Dictionary<int, Chunk> loadedChunks;
-
-        private readonly Dictionary<byte, Vector2> edgeOffsets = new Dictionary<byte, Vector2> {
-                { 1, new Vector2(1, 0) },
-                { 2, new Vector2(0, 1)  },
-                { 4, new Vector2(-1, 0)  },
-                { 8, new Vector2(0, -1) },
-            };
-
-        private readonly Dictionary<byte, Vector2> cornerOffsets = new Dictionary<byte, Vector2> {
-                { 1, new Vector2(1, 1)  },
-                { 2, new Vector2(-1, 1) },
-                { 4, new Vector2(-1, -1)},
-                { 8, new Vector2(1, -1) },
-            };
 		
 		public WorldData(GenerationData genData) {
 			int chunkWidth = (genData.width / Config.CHUNK_SIZE);
@@ -46,7 +32,7 @@ namespace Errant.src.World
 			
 			header.width = genData.width;
 			header.height = genData.height;
-			header.versionNumber = "0.0.1";
+			header.spawnArea = genData.spawnArea;
 
 			for (int i = 0; i < (chunkWidth * chunkHeight); i++) {
 				chunks[i] = new Chunk(genData, i % chunkWidth, i / chunkWidth, header.width);
@@ -71,20 +57,20 @@ namespace Errant.src.World
 	        loadedChunks = new Dictionary<int, Chunk>();
 	    }
 
-		public WorldHeader GetWorldHeader() {
-			return header;
-		}
-
-//	    public PersistentTile[] GetTileData() {
-//	        return tileData;
-//	    }
-
 		public Chunk[] GetChunks() {
 			return chunks;
 		}
 
 		public void SetChunks(Chunk[] value) {
 			chunks = value;
+		}
+
+		public WorldHeader GetHeader() {
+			return header;
+		}
+
+		public void SetHeader(WorldHeader value) {
+			header = value;
 		}
 
 		public int GetWidth() {
@@ -95,26 +81,17 @@ namespace Errant.src.World
 			return header.height;
 		}
 
-		public string GetName() {
-			return header.name;
-		}
-
 		public void SetName(string name) {
 			header.name = name;
 		}
 
-		public string Version() {
-			return header.versionNumber;
+		public void SetVersion(string value) {
+			version = value;
 		}
 
-		public void SetVersion(string version) {
-			header.versionNumber = version;
+		public string GetVersion() {
+			return version;
 		}
-
-	    public void SetDimensions(int w, int h) {
-		    header.width = w;
-		    header.height = h;
-	    }
 
 	    public ActiveTile GetActiveTile(int tileX, int tileY) {
 	        int localTileX = tileX % Config.CHUNK_SIZE;

@@ -40,7 +40,7 @@ namespace Errant.src.World {
         }
 
 		public WorldHeader GetWorldHeader() {
-			return worldData.GetWorldHeader();
+			return worldData.GetHeader();
 		}
 
 		public int GetWidthInChunks() {
@@ -49,6 +49,10 @@ namespace Errant.src.World {
 
 		public int GetHeightInChunks() {
 			return worldData.GetHeight() / Config.CHUNK_SIZE;
+		}
+
+		public Rectangle GetSpawnArea() {
+			return worldData.GetHeader().spawnArea;
 		}
 
 		public void GenerateWorld(GenerationSettings settings, BackgroundWorker worker = null) {

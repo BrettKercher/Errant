@@ -36,7 +36,8 @@ namespace Errant.src.Scenes {
             base.Initialize(content);
             worldManager.LoadContent(content);
             playerTransform = (Transform)player.GetComponent(typeof(Transform));
-            playerTransform.Position = new Vector2(208 * Config.TILE_SIZE, 144 * Config.TILE_SIZE);
+            Rectangle spawnArea = worldManager.GetSpawnArea();
+            playerTransform.Position = new Vector2(spawnArea.X * Config.TILE_SIZE, spawnArea.Y * Config.TILE_SIZE);
             Camera2D.Instance.MoveTo(playerTransform.Position);
         }
 

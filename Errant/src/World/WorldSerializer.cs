@@ -1,5 +1,7 @@
 ﻿using System;
 using System.IO;
+using GeonBit.UI.Entities;
+using Microsoft.Xna.Framework;
 
 namespace Errant.src.World {
     public class WorldSerializer {
@@ -24,13 +26,15 @@ namespace Errant.src.World {
         }
 
         public void Serialize(WorldData world) {
+
+            WorldHeader header = world.GetHeader();
             
-            string dir = Path.Combine(Config.WorldSaveDirectory, world.GetName());
+            string dir = Path.Combine(Config.WorldSaveDirectory, header.name);
             if (!Directory.Exists(dir)) {
                 Directory.CreateDirectory(dir);
             }
 
-            fileStream = new FileStream(Path.Combine(dir, world.GetName() + fileExtension), FileMode.Create, FileAccess.Write);
+            fileStream = new FileStream(Path.Combine(dir, header.name + fileExtension), FileMode.Create, FileAccess.Write);
             writer = new BinaryWriter(fileStream);
             int[] sectionPointers = new int[numSections];
 
@@ -44,7 +48,7 @@ namespace Errant.src.World {
         }
 
         private int BlockOutSectionPointer(WorldData world) {
-            writer.Write(world.Version());
+            writer.Write(world.GetVersion());
             writer.Write((byte) numSections);
             for (int i = 0; i < numSections; i++) {
                 writer.Write(0);
@@ -54,9 +58,12 @@ namespace Errant.src.World {
         }
 
         private int SerializeHeader(WorldData world) {
-            writer.Write(world.GetName());
-            writer.Write(world.GetWidth());
-            writer.Write(world.GetHeight());
+            WorldHeader header = world.GetHeader();
+            writer.Write(header.name);
+            writer.Write(header.width);
+            writer.Write(header.height);
+            writer.Write(header.spawnArea.X);
+            writer.Write(header.spawnArea.Y);
             
             return (int) writer.BaseStream.Position;
         }
@@ -97,7 +104,8 @@ namespace Errant.src.World {
         private void SerializeSectionPointers(WorldData world, int[] pointers) {
             writer.BaseStream.Position = 0L;
 
-            writer.Write(world.Version());
+            WorldHeader header = world.GetHeader();
+            writer.Write(world.GetVersion());
             writer.Write((byte) pointers.Length);
 
             for (int i = 0; i < pointers.Length; i++) {
@@ -163,7 +171,14 @@ namespace Errant.src.World {
             worldData.SetName(reader.ReadString());
             int width = reader.ReadInt32();
             int height = reader.ReadInt32();
-            worldData.SetDimensions(width, height);
+            int spawnX = reader.ReadInt32();
+            int spawnY = reader.ReadInt32();
+
+            WorldHeader header = new WorldHeader();
+            header.width = width;
+            header.height = height;
+            header.spawnArea = new Rectangle(spawnX, spawnY, Config.SPAWN_AREA_SIZE, Config.SPAWN_AREA_SIZE);
+            worldData.SetHeader(header);
         }
 
         private void DeserializeWorldChunks(WorldData worldData) {

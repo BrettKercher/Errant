@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using Microsoft.Xna.Framework;
 
 namespace Errant.src.World.Generation {
 
@@ -36,6 +37,16 @@ namespace Errant.src.World.Generation {
 				Debug.WriteLine("[GENERATION] " + step.GetName() + " Ran In: " + FormatTime(timer.Elapsed));
 				timer.Reset();
 			}
+			
+			//determine spawn location
+			int equator = data.height / 2;
+			int startingY = equator * data.width;
+			int firstLand = 0;
+			while (!data.pointData[startingY + firstLand].land) {
+				firstLand++;
+			}
+			
+			data.spawnArea = new Rectangle(firstLand + 10, equator - 5, Config.SPAWN_AREA_SIZE, Config.SPAWN_AREA_SIZE);
 
 			return data;
 		}

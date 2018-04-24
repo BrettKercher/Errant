@@ -1,6 +1,7 @@
 ﻿using System;
 using Errant.Networking;
 using Errant.src.World;
+using GeonBit.UI.Entities;
 using Lidgren.Network;
 
 namespace Errant.src.Networking {
@@ -82,9 +83,8 @@ namespace Errant.src.Networking {
                     // int = width
                     // int = height
 
-                    WorldHeader header;
+                    WorldHeader header = new WorldHeader();
                     header.name = msg.ReadString();
-                    header.versionNumber = msg.ReadString();
                     header.width = msg.ReadInt32();
                     header.height = msg.ReadInt32();
 

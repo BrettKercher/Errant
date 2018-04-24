@@ -22,7 +22,6 @@ namespace ContentPipelineExtension {
         public override TInput Import(string filename, ContentImporterContext context) {
             return JObject.Parse(File.ReadAllText(filename));
         }
-
     }
 
 }
